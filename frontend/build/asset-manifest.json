@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ec75cd7a.css",
+    "main.js": "/static/js/main.f0e0bb56.js",
+    "static/media/hospital_hero.png": "/static/media/hospital_hero.83619d793a2b98f504d1.png",
+    "static/media/doctor_team.png": "/static/media/doctor_team.3a970ba428e74d19d6b3.png",
+    "static/media/medical_facilities.png": "/static/media/medical_facilities.c5ed45e14f2013535549.png",
+    "static/media/medication_variety.png": "/static/media/medication_variety.b7df698d4fa68c4bee53.png",
+    "index.html": "/index.html",
+    "main.ec75cd7a.css.map": "/static/css/main.ec75cd7a.css.map",
+    "main.f0e0bb56.js.map": "/static/js/main.f0e0bb56.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ec75cd7a.css",
+    "static/js/main.f0e0bb56.js"
+  ]
+}
