@@ -31,4 +31,6 @@ yarn-error.log*
 
 # OS
 Thumbs.db
+database/
+backend/project.env
 
