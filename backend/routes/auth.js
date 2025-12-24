@@ -29,9 +29,9 @@ router.post('/register/patient', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorMessages = errors.array().map(err => err.msg || `${err.param}: ${err.msg}`).join(', ');
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: `Validation failed: ${errorMessages}`,
-        errors: errors.array() 
+        errors: errors.array()
       });
     }
 
@@ -86,7 +86,7 @@ router.post('/register/patient', [
     });
   } catch (error) {
     console.error('Patient registration error:', error);
-    
+
     // Handle MongoDB duplicate key errors
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
@@ -95,15 +95,15 @@ router.post('/register/patient', [
       }
       return res.status(400).json({ message: `A record with this ${field} already exists.` });
     }
-    
+
     // Handle MongoDB validation errors
     if (error.name === 'ValidationError') {
       const validationErrors = Object.values(error.errors).map(err => err.message).join(', ');
       return res.status(400).json({ message: `Validation error: ${validationErrors}` });
     }
-    
+
     // Generic error
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Registration failed. Please check all required fields and try again.',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -125,9 +125,9 @@ router.post('/register/doctor', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorMessages = errors.array().map(err => err.msg || `${err.param}: ${err.msg}`).join(', ');
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: `Validation failed: ${errorMessages}`,
-        errors: errors.array() 
+        errors: errors.array()
       });
     }
 
@@ -186,7 +186,7 @@ router.post('/register/doctor', [
     });
   } catch (error) {
     console.error('Doctor registration error:', error);
-    
+
     // Handle MongoDB duplicate key errors
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
@@ -198,15 +198,15 @@ router.post('/register/doctor', [
       }
       return res.status(400).json({ message: `A record with this ${field} already exists.` });
     }
-    
+
     // Handle MongoDB validation errors
     if (error.name === 'ValidationError') {
       const validationErrors = Object.values(error.errors).map(err => err.message).join(', ');
       return res.status(400).json({ message: `Validation error: ${validationErrors}` });
     }
-    
+
     // Generic error
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Registration failed. Please check all required fields and try again.',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -225,9 +225,9 @@ router.post('/register/hospital', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const errorMessages = errors.array().map(err => err.msg || `${err.param}: ${err.msg}`).join(', ');
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: `Validation failed: ${errorMessages}`,
-        errors: errors.array() 
+        errors: errors.array()
       });
     }
 
@@ -281,7 +281,7 @@ router.post('/register/hospital', [
     });
   } catch (error) {
     console.error('Hospital registration error:', error);
-    
+
     // Handle MongoDB duplicate key errors
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
@@ -293,15 +293,15 @@ router.post('/register/hospital', [
       }
       return res.status(400).json({ message: `A record with this ${field} already exists.` });
     }
-    
+
     // Handle MongoDB validation errors
     if (error.name === 'ValidationError') {
       const validationErrors = Object.values(error.errors).map(err => err.message).join(', ');
       return res.status(400).json({ message: `Validation error: ${validationErrors}` });
     }
-    
+
     // Generic error
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Registration failed. Please check all required fields and try again.',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -320,13 +320,17 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
+    console.log(`Login attempt for: ${email}`);
 
     const user = await User.findOne({ email }).populate('profileId');
     if (!user) {
+      console.log(`User not found: ${email}`);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const isMatch = await user.comparePassword(password);
+    console.log(`Password match for ${email}: ${isMatch}`);
+
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
@@ -365,6 +369,39 @@ router.get('/me', auth, async (req, res) => {
         profile: user.profileId
       }
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Reset password
+router.post('/reset-password', [
+  body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email address'),
+  body('newPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+
+    const { email, newPassword } = req.body;
+    console.log(`Reset attempt for: ${email}`);
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      console.log(`Reset failed - user not found: ${email}`);
+      return res.status(404).json({ message: 'No account found with this email address' });
+    }
+
+    user.password = newPassword;
+    console.log(`Updating password for ${email}. New password length: ${newPassword.length}`);
+    await user.save();
+    console.log(`Password updated and saved for ${email}`);
+
+    res.json({ message: 'Password reset successfully. You can now login with your new password.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });

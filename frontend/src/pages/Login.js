@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -29,18 +29,45 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showReset, setShowReset] = useState(false);
   const [selectedRole, setSelectedRole] = useState('patient');
-  const { login } = useContext(AuthContext);
+  const { login, resetPassword } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.role) {
+      setSelectedRole(location.state.role);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     const result = await login(email, password);
     if (result.success && result.user) {
       const role = result.user.role;
       navigate(`/${role}`);
+    } else {
+      setError(result.message);
+    }
+  };
+
+  const handleReset = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    const result = await resetPassword(email, password);
+    if (result.success) {
+      setSuccess(result.message);
+      setTimeout(() => {
+        setShowReset(false);
+        setSuccess('');
+      }, 3000);
     } else {
       setError(result.message);
     }
@@ -258,7 +285,7 @@ const Login = () => {
                       color: 'text.primary',
                     }}
                   >
-                    Sign In
+                    {showReset ? 'Reset Password' : 'Sign In'}
                   </Typography>
                   <Box
                     sx={{
@@ -275,11 +302,13 @@ const Login = () => {
                   >
                     {roleOptions.find(r => r.value === selectedRole)?.icon}
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {roleOptions.find(r => r.value === selectedRole)?.label} Login
+                      {roleOptions.find(r => r.value === selectedRole)?.label} {showReset ? 'Account' : 'Login'}
                     </Typography>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
-                    Enter your credentials to access your account
+                    {showReset
+                      ? 'Enter your email and a new password to reset your account'
+                      : 'Enter your credentials to access your account'}
                   </Typography>
                 </Box>
 
@@ -298,7 +327,23 @@ const Login = () => {
                   </Alert>
                 )}
 
-                <Box component="form" onSubmit={handleSubmit} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                {success && (
+                  <Alert
+                    severity="success"
+                    sx={{
+                      mb: 3,
+                      borderRadius: 2,
+                    }}
+                  >
+                    {success}
+                  </Alert>
+                )}
+
+                <Box
+                  component="form"
+                  onSubmit={showReset ? handleReset : handleSubmit}
+                  sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}
+                >
                   <TextField
                     fullWidth
                     required
@@ -321,26 +366,47 @@ const Login = () => {
                     fullWidth
                     required
                     name="password"
-                    label="Password"
+                    label={showReset ? 'New Password' : 'Password'}
                     type="password"
                     id="password"
-                    autoComplete="current-password"
+                    autoComplete={showReset ? 'new-password' : 'current-password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    sx={{ mb: 3 }}
+                    sx={{ mb: 1 }}
                     InputProps={{
                       startAdornment: (
                         <Lock sx={{ color: 'action.active', mr: 1, ml: 1 }} />
                       ),
                     }}
                   />
+
+                  {!showReset && (
+                    <Box sx={{ textAlign: 'right', mb: 2 }}>
+                      <Button
+                        size="small"
+                        onClick={() => {
+                          setShowReset(true);
+                          setError('');
+                          setSuccess('');
+                        }}
+                        sx={{
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          color: roleOptions.find(r => r.value === selectedRole)?.color
+                        }}
+                      >
+                        Forgot Password?
+                      </Button>
+                    </Box>
+                  )}
+
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     size="large"
                     sx={{
-                      mt: 'auto',
+                      mt: showReset ? 4 : 'auto',
                       mb: 2,
                       py: 1.5,
                       background: `linear-gradient(135deg, ${roleOptions.find(r => r.value === selectedRole)?.color} 0%, ${roleOptions.find(r => r.value === selectedRole)?.color}dd 100%)`,
@@ -353,21 +419,43 @@ const Login = () => {
                       },
                     }}
                   >
-                    Sign In as {roleOptions.find(r => r.value === selectedRole)?.label}
+                    {showReset
+                      ? 'Reset My Password'
+                      : `Sign In as ${roleOptions.find(r => r.value === selectedRole)?.label}`}
                   </Button>
+
                   <Box textAlign="center" sx={{ mt: 2 }}>
                     <Typography variant="body2" color="text.secondary">
-                      Don't have an account?{' '}
-                      <Link
-                        to="/register"
-                        style={{
-                          textDecoration: 'none',
-                          color: roleOptions.find(r => r.value === selectedRole)?.color,
-                          fontWeight: 600,
-                        }}
-                      >
-                        Register here
-                      </Link>
+                      {showReset ? (
+                        <Button
+                          onClick={() => {
+                            setShowReset(false);
+                            setError('');
+                            setSuccess('');
+                          }}
+                          sx={{
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            color: roleOptions.find(r => r.value === selectedRole)?.color
+                          }}
+                        >
+                          Back to Sign In
+                        </Button>
+                      ) : (
+                        <>
+                          Don't have an account?{' '}
+                          <Link
+                            to="/register"
+                            style={{
+                              textDecoration: 'none',
+                              color: roleOptions.find(r => r.value === selectedRole)?.color,
+                              fontWeight: 600,
+                            }}
+                          >
+                            Register here
+                          </Link>
+                        </>
+                      )}
                     </Typography>
                   </Box>
                 </Box>

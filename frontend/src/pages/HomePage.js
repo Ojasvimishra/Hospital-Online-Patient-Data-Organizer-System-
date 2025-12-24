@@ -10,117 +10,133 @@ import {
     Grid,
     Card,
     CardContent,
+    Paper,
     Stack,
     useTheme,
     Chip,
-    IconButton
+    Avatar,
+    Divider
 } from '@mui/material';
 import {
     LocalHospital,
+    People,
     MedicalServices,
-    Facebook,
-    Twitter,
-    LinkedIn,
-    Instagram,
-    CheckCircle,
-    Stars
+    CalendarToday,
+    Assignment,
+    Security,
+    Speed,
+    CloudQueue,
+    Login as LoginIcon
 } from '@mui/icons-material';
-import hospitalHero from '../assets/images/hospital_hero.jpg';
-import drSarahJohnson from '../assets/images/dr_sarah_johnson.jpg';
-import drJamesWilson from '../assets/images/dr_james_wilson.jpg';
-import drEmilyChen from '../assets/images/dr_emily_chen.jpg';
-import drMichaelBrown from '../assets/images/dr_michael_brown.jpg';
-import medicalFacilities from '../assets/images/medical_facilities.jpg';
+import StatsCard from '../components/common/StatsCard';
 
 const HomePage = () => {
     const navigate = useNavigate();
     const theme = useTheme();
 
-    const scrollToSection = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+    const portalTiles = [
+        {
+            title: 'Patient Portal',
+            desc: 'Seamlessly access your medical journey, prescriptions, and expert care.',
+            icon: People,
+            color: '#0ea5e9',
+            path: '/login',
+            role: 'patient',
+            features: ['Smart Appointments', 'Digital Prescriptions', 'Health Analytics'],
+            gradient: 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)'
+        },
+        {
+            title: 'Doctor Portal',
+            desc: 'Empowering physicians with real-time data and clinical precision.',
+            icon: MedicalServices,
+            color: '#10b981',
+            path: '/login',
+            role: 'doctor',
+            features: ['Live Diagnostics', 'Patient Triage', 'Rapid Documentation'],
+            gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+        },
+        {
+            title: 'Administration',
+            desc: 'The nerve center of hospital operations and enterprise management.',
+            icon: LocalHospital,
+            color: '#6366f1',
+            path: '/login',
+            role: 'hospital',
+            features: ['System Intelligence', 'Resource Audit', 'Enterprise Security'],
+            gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'
         }
-    };
-
-    const doctors = [
-        { name: 'Dr. Sarah Johnson, MD', specialty: 'Chief Cardiologist', color: theme.palette.primary.main, exp: '15+ Years', image: drSarahJohnson },
-        { name: 'Dr. James Wilson, PhD', specialty: 'Neurosurgeon', color: theme.palette.secondary.main, exp: '12+ Years', image: drJamesWilson },
-        { name: 'Dr. Emily Chen, MD', specialty: 'Pediatric Specialist', color: theme.palette.primary.light, exp: '10+ Years', image: drEmilyChen },
-        { name: 'Dr. Michael Brown, MS', specialty: 'Orthopedic Surgeon', color: theme.palette.secondary.light, exp: '18+ Years', image: drMichaelBrown },
     ];
 
-    const medications = [
-        { type: 'Antibiotics', count: '50+ Variants', desc: 'Full spectrum coverage' },
-        { type: 'Analgesics', count: '30+ Types', desc: 'Pain management solutions' },
-        { type: 'Cardiovascular', count: '45+ Brands', desc: 'Heart health essentials' },
-        { type: 'Vitamins', count: '100+ Supplements', desc: 'Immunity & wellness' },
-    ];
-
-    const facilities = [
-        { title: 'Advanced MRI & CT Scan', desc: 'High-resolution imaging for precise diagnosis using the latest Siemens Healthineers technology.' },
-        { title: 'Robotic Surgery Theatre', desc: 'Minimally invasive procedures performed with da Vinci Surgical Systems for faster recovery.' },
-        { title: 'Intensive Care Units (ICU)', desc: '24/7 monitored critical care beds with dedicated ventilators and life support systems.' },
-        { title: 'Private Recovery Suites', desc: 'Luxury private rooms with automated beds, en-suite bathrooms, and guest accommodation.' },
+    const systemStats = [
+        { title: 'Global Patients', value: '12.4k', icon: People, color: '#0ea5e9' },
+        { title: 'Medical Experts', value: '450+', icon: MedicalServices, color: '#10b981' },
+        { title: 'Uptime Rate', value: '99.9%', icon: Speed, color: '#6366f1' },
+        { title: 'Daily Consults', value: '128', icon: CalendarToday, color: '#f59e0b' }
     ];
 
     return (
-        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', display: 'flex', flexDirection: 'column', color: 'text.primary' }}>
+        <Box sx={{
+            bgcolor: '#f8fafc',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            overflow: 'hidden'
+        }}>
+            {/* Background Decorative Elements */}
+            <Box sx={{
+                position: 'absolute', top: -100, right: -100, width: 400, height: 400,
+                background: 'radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%)',
+                zIndex: 0
+            }} />
+            <Box sx={{
+                position: 'absolute', bottom: -100, left: -100, width: 500, height: 500,
+                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%)',
+                zIndex: 0
+            }} />
 
-            {/* Navbar */}
-            <AppBar position="fixed" elevation={0} sx={{
-                background: 'rgba(255, 255, 255, 0.9)',
-                backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(0,0,0,0.05)'
-            }}>
+            {/* Premium Navbar */}
+            <AppBar position="fixed" elevation={0} className="glass">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: '80px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Box sx={{
-                                width: 45, height: 45, borderRadius: '12px',
-                                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                width: 45, height: 45, borderRadius: '14px',
+                                background: 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: `0 4px 10px ${theme.palette.primary.main}40`
+                                boxShadow: '0 8px 16px -4px rgba(14, 165, 233, 0.5)'
                             }}>
                                 <LocalHospital sx={{ color: '#fff', fontSize: 28 }} />
                             </Box>
                             <Box>
-                                <Typography variant="h6" noWrap sx={{
-                                    fontFamily: 'Outfit, sans-serif',
-                                    fontWeight: 700,
-                                    letterSpacing: '0.02em',
-                                    lineHeight: 1,
-                                    color: 'text.primary'
+                                <Typography variant="h6" sx={{
+                                    fontWeight: 900, fontSize: '1.4rem', color: '#0f172a',
+                                    letterSpacing: '-0.04em', lineHeight: 1
                                 }}>
-                                    SHREE RAVI SUPER SPECIALITY HOSPITAL
+                                    HOPDS (Hopital online patient data management system)
                                 </Typography>
-                                <Typography variant="caption" sx={{ letterSpacing: '0.2em', color: 'primary.main', fontWeight: 600 }}>MEDICAL CENTER</Typography>
+                                <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                    Precision Control
+                                </Typography>
                             </Box>
                         </Box>
 
-                        <Stack direction="row" spacing={1} sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
-                            {['Home', 'Doctors', 'Medications', 'Facilities'].map((item) => (
-                                <Button
-                                    key={item}
-                                    color="inherit"
-                                    onClick={() => scrollToSection(item.toLowerCase())}
-                                    sx={{
-                                        fontSize: '0.95rem',
-                                        px: 2,
-                                        fontWeight: 500,
-                                        color: 'text.secondary',
-                                        '&:hover': { color: 'primary.main', background: 'transparent' }
-                                    }}
-                                >
-                                    {item}
-                                </Button>
-                            ))}
+                        <Stack direction="row" spacing={3} alignItems="center">
+                            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5, px: 2, py: 0.5, borderRadius: '20px', bgcolor: 'rgba(16, 185, 129, 0.1)' }}>
+                                <Box sx={{ width: 8, height: 8, bgcolor: '#10b981', borderRadius: '50%', boxShadow: '0 0 10px #10b981' }} />
+                                <Typography variant="caption" sx={{ fontWeight: 800, color: '#047857' }}>SYSTEM LIVE</Typography>
+                            </Box>
                             <Button
                                 variant="contained"
+                                startIcon={<LoginIcon />}
                                 onClick={() => navigate('/login')}
-                                sx={{ ml: 3, borderRadius: '50px', px: 4, fontWeight: 700 }}
+                                sx={{
+                                    borderRadius: '14px',
+                                    px: 4,
+                                    boxShadow: '0 10px 20px -5px rgba(14, 165, 233, 0.4)'
+                                }}
                             >
-                                Login Portal
+                                Login
                             </Button>
                         </Stack>
                     </Toolbar>
@@ -128,247 +144,289 @@ const HomePage = () => {
             </AppBar>
 
             {/* Hero Section */}
-            <Box id="home" sx={{
-                position: 'relative',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                paddingTop: '80px',
-                overflow: 'hidden',
-                background: 'linear-gradient(180deg, rgba(235,248,255,0.5) 0%, rgba(255,255,255,0) 100%)'
-            }}>
-                <Box
-                    component="img"
-                    src={hospitalHero}
-                    sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', zIndex: -1, opacity: 0.1 }}
-                />
+            <Box sx={{ pt: '140px', pb: 10, position: 'relative', zIndex: 1 }}>
+                <Container maxWidth="lg">
+                    <Box sx={{ textAlign: 'center', mb: 10 }}>
+                        <Chip
+                            label="Next-Gen Healthcare"
+                            size="small"
+                            sx={{
+                                mb: 3,
+                                fontWeight: 800,
+                                bgcolor: 'rgba(14, 165, 233, 0.1)',
+                                color: 'primary.main',
+                                border: '1px solid rgba(14, 165, 233, 0.2)',
+                                px: 1
+                            }}
+                        />
+                        <Typography variant="h1" sx={{ color: '#0f172a', mb: 3 }}>
+                            Unified Healthcare<br />
+                            <Box component="span" sx={{
+                                background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                            }}>Management Dashboard</Box>
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: '#64748b', mb: 5, maxWidth: '700px', mx: 'auto', fontWeight: 500 }}>
+                            HOPDS (Hopital oline patient data management system) bridges the gap between clinicians, patients, and administrators with a secure, real-time data ecosystem optimized for performance.
+                        </Typography>
 
-                <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-                    <Grid container spacing={6} alignItems="center">
-                        <Grid item xs={12} md={7}>
-                            <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
-                                <Chip icon={<Stars sx={{ fontSize: '16px !important' }} />} label="JCI Accredited & ISO 9001:2015 Certified" color="primary" variant="outlined" sx={{ fontWeight: 600, border: `1px solid ${theme.palette.primary.light}` }} />
-                            </Stack>
-                            <Typography variant="h1" sx={{ mb: 3, color: 'text.primary' }}>
-                                The Future of <br />
-                                <span style={{ color: theme.palette.primary.main }}>Modern Healthcare</span>
-                            </Typography>
-                            <Typography variant="h5" color="text.secondary" sx={{ mb: 5, fontWeight: 400, maxWidth: '650px', lineHeight: 1.6 }}>
-                                Combining artificial intelligence, robotic surgery, and compassionate care to define the next generation of medical excellence.
-                            </Typography>
-                            <Stack direction="row" spacing={2}>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => navigate('/login')}
-                                    sx={{ borderRadius: '10px', px: 4, fontWeight: 700, fontSize: '1.1rem', py: 1.5 }}
-                                >
-                                    Find a Doctor
-                                </Button>
-                            </Stack>
-
-                            <Grid container spacing={4} sx={{ mt: 8 }}>
-                                {[
-                                    { label: 'Patient Satisfaction', val: '99.8%' },
-                                    { label: 'Successful Surgeries', val: '50k+' },
-                                    { label: 'Medical Specialists', val: '120+' }
-                                ].map((stat, i) => (
-                                    <Grid item key={i}>
-                                        <Typography variant="h3" fontWeight={800} color="primary">{stat.val}</Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ letterSpacing: 1 }}>{stat.label.toUpperCase()}</Typography>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Box>
-
-            {/* Facilities Section */}
-            <Box id="facilities" sx={{ py: 15, position: 'relative', bgcolor: '#fff' }}>
-                <Container maxWidth="xl">
-                    <Grid container spacing={8} alignItems="center">
-                        <Grid item xs={12} md={6}>
-                            <Box sx={{ position: 'relative' }}>
-                                <Box
-                                    component="img"
-                                    src={medicalFacilities}
-                                    sx={{
-                                        width: '100%',
+                        {/* <Grid container spacing={4} sx={{ mt: 2 }}>
+                            {systemStats.map((stat, idx) => (
+                                <Grid item xs={6} md={3} key={idx}>
+                                    <Box sx={{
+                                        p: 3,
                                         borderRadius: '24px',
-                                        boxShadow: `0 20px 40px ${theme.palette.primary.main}20`,
-                                    }}
-                                />
-                                <Box sx={{
-                                    position: 'absolute', bottom: -30, right: -30,
-                                    bgcolor: 'background.paper', p: 4, borderRadius: '20px',
-                                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                                    border: '1px solid rgba(0,0,0,0.05)',
-                                    maxWidth: 280
-                                }}>
-                                    <Typography variant="h6" fontWeight={700} gutterBottom>World-Class Infrastructure</Typography>
-                                    <Typography variant="body2" color="text.secondary">Equipped with the only Neutron Therapy Center in the region.</Typography>
-                                </Box>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="overline" color="secondary" fontWeight={700} sx={{ letterSpacing: 2 }}>FACILITIES AVAILABLE</Typography>
-                            <Typography variant="h2" sx={{ mb: 4, mt: 1 }}>Cutting-Edge Medical Infrastructure</Typography>
-                            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 6 }}>
-                                We believe that the best care requires the best tools. Our facility is designed to support complex medical procedures with maximum safety.
-                            </Typography>
-                            <Grid container spacing={3}>
-                                {facilities.map((fac, idx) => (
-                                    <Grid item xs={12} sm={6} key={idx}>
-                                        <Box sx={{ p: 3, borderLeft: `3px solid ${theme.palette.primary.main}`, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: '0 8px 8px 0' }}>
-                                            <Typography variant="h6" fontWeight={700} gutterBottom>{fac.title}</Typography>
-                                            <Typography variant="body2" color="text.secondary">{fac.desc}</Typography>
-                                        </Box>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Box>
-
-            {/* Doctors Section */}
-            <Box id="doctors" sx={{ py: 15, bgcolor: '#F4F6F8' }}>
-                <Container maxWidth="xl">
-                    <Box sx={{ textAlign: 'center', mb: 10, maxWidth: 800, mx: 'auto' }}>
-                        <Typography variant="overline" color="secondary" fontWeight={700} sx={{ letterSpacing: 2 }}>OUR SPECIALISTS</Typography>
-                        <Typography variant="h2" sx={{ mb: 2 }}>Board-Certified Experts</Typography>
-                        <Typography color="text.secondary">Our team consists of internationally trained specialists pushing the boundaries of medicine.</Typography>
+                                        bgcolor: 'white',
+                                        border: '1px solid rgba(226, 232, 240, 0.8)',
+                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                                        transition: 'all 0.3s ease',
+                                        '&:hover': { transform: 'translateY(-5px)', borderColor: stat.color, boxShadow: `0 12px 24px -10px ${stat.color}40` }
+                                    }}>
+                                        <Typography variant="h4" sx={{ fontWeight: 900, color: stat.color, mb: 0.5 }}>{stat.value}</Typography>
+                                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>{stat.title}</Typography>
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid> */}
                     </Box>
+
+                    {/* Portals Section */}
+                    <Typography variant="h5" sx={{ fontWeight: 900, mb: 5, color: '#0f172a', textAlign: 'center' }}>
+                        Choose Your Portal
+                    </Typography>
                     <Grid container spacing={4}>
-                        {doctors.map((doctor, index) => (
-                            <Grid item xs={1} sm={6} md={3} key={index}>
+                        {portalTiles.map((portal, idx) => (
+                            <Grid item xs={12} md={4} key={idx}>
                                 <Card sx={{
                                     height: '100%',
-                                    transition: 'all 0.4s ease',
-                                    '&:hover': { transform: 'translateY(-12px)', boxShadow: `0 20px 50px ${doctor.color}30` },
-                                    borderTop: `4px solid ${doctor.color}`
+                                    p: 1,
+                                    borderRadius: '32px',
+                                    position: 'relative',
+                                    '&:hover': {
+                                        transform: 'translateY(-12px)',
+                                        '& .portal-btn': {
+                                            transform: 'scale(1.02)',
+                                            boxShadow: `0 20px 40px -10px ${portal.color}60`
+                                        }
+                                    }
                                 }}>
-                                    <Box sx={{ height: 300, position: 'relative', overflow: 'hidden', bgcolor: '#f0f0f0' }}>
-                                        <Box component="img" src={doctor.image} sx={{
-                                            width: '100%', height: '100%', objectFit: 'cover',
-                                        }} />
-                                        {/* <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, p: 2, background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)' }}>
-                                            <Stack direction="row" justifyContent="center" spacing={1}>
-                                                <IconButton size="small" sx={{ color: 'white', '&:hover': { bgcolor: doctor.color } }}><LinkedIn /></IconButton>
-                                                <IconButton size="small" sx={{ color: 'white', '&:hover': { bgcolor: doctor.color } }}><Twitter /></IconButton>
-                                            </Stack>
-                                        </Box> */}
+                                    <Box sx={{
+                                        p: 4,
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        borderRadius: '28px',
+                                        bgcolor: '#fff'
+                                    }}>
+                                        <Box sx={{
+                                            width: 64, height: 64, borderRadius: '20px',
+                                            background: portal.gradient,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            mb: 4,
+                                            boxShadow: `0 12px 24px -6px ${portal.color}50`
+                                        }}>
+                                            <portal.icon sx={{ color: '#fff', fontSize: 32 }} />
+                                        </Box>
+
+                                        <Typography variant="h5" sx={{ fontWeight: 800, mb: 2, color: '#0f172a' }}>
+                                            {portal.title}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ color: '#64748b', mb: 4, flexGrow: 1, lineHeight: 1.6 }}>
+                                            {portal.desc}
+                                        </Typography>
+
+                                        <Stack spacing={2} sx={{ mb: 5 }}>
+                                            {portal.features.map((feat, i) => (
+                                                <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: portal.color }} />
+                                                    <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155' }}>{feat}</Typography>
+                                                </Box>
+                                            ))}
+                                        </Stack>
+
+                                        <Button
+                                            fullWidth
+                                            className="portal-btn"
+                                            variant="contained"
+                                            onClick={() => navigate(portal.path, { state: { role: portal.role } })}
+                                            sx={{
+                                                background: portal.gradient,
+                                                borderRadius: '16px',
+                                                py: 2,
+                                                fontSize: '1rem',
+                                                '&:hover': { background: portal.gradient }
+                                            }}
+                                        >
+                                            Access Portal
+                                        </Button>
                                     </Box>
-                                    <CardContent sx={{ textAlign: 'center', pt: 3 }}>
-                                        <Typography variant="h6" fontWeight={700}>{doctor.name}</Typography>
-                                        <Typography variant="subtitle2" sx={{ color: doctor.color, fontWeight: 600, mb: 1 }}>{doctor.specialty}</Typography>
-                                        <Typography variant="caption" color="text.secondary">Experience: {doctor.exp}</Typography>
-                                    </CardContent>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
-                </Container>
-            </Box>
 
-            {/* Medications Section */}
-            <Box id="medications" sx={{ py: 15 }}>
-                <Container maxWidth="xl">
-                    <Grid container spacing={8} alignItems="center">
-                        <Grid item xs={12} md={5}>
-                            <Typography variant="overline" color="primary" fontWeight={700} sx={{ letterSpacing: 2 }}>PHARMACY SERVICES</Typography>
-                            <Typography variant="h2" sx={{ mb: 3 }}>24/7 On-Site Pharmacy</Typography>
-                            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4 }}>
-                                Our automated pharmacy dispensing system ensures 99.9% accuracy. We stock a comprehensive range of specialized medications.
-                            </Typography>
-                            {/* <Stack spacing={2}>
-                                {[1, 2, 3].map(i => (
-                                    <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                        <CheckCircle color="success" sx={{ fontSize: 20 }} />
-                                        <Typography color="text.secondary">International FDA Approved Drugs</Typography>
-                                    </Box>
-                                ))}
-                            </Stack> */}
-                        </Grid>
-                        <Grid item xs={12} md={7}>
-                            <Grid container spacing={3}>
-                                {medications.map((med, index) => (
-                                    <Grid item xs={12} sm={6} key={index}>
-                                        <Card sx={{ p: 2, height: '100%', border: '1px solid rgba(0,0,0,0.05)', '&:hover': { borderColor: theme.palette.primary.main, boxShadow: '0 10px 30px rgba(0,0,0,0.05)' } }}>
-                                            <CardContent>
-                                                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
-                                                    <MedicalServices sx={{ color: theme.palette.primary.main, fontSize: 40 }} />
-                                                    <Chip label="Available" color="success" size="small" variant="outlined" />
-                                                </Stack>
-                                                <Typography variant="h5" fontWeight={700} gutterBottom>{med.type}</Typography>
-                                                <Typography variant="body2" color="text.secondary" gutterBottom>{med.desc}</Typography>
-                                                <Typography variant="h6" color="primary" sx={{ mt: 2 }}>{med.count}</Typography>
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Box>
-
-            {/* Footer */}
-            <Box sx={{ bgcolor: '#1A2027', color: 'white', py: 8 }}>
-                <Container maxWidth="xl">
-                    <Grid container spacing={4} justifyContent="center">
-                        <Grid item xs={12} md={6}>
-                            <Box sx={{ textAlign: 'center' }}>
-                                <Stack direction="row" alignItems="center" justifyContent="center" spacing={1} sx={{ mb: 3 }}>
-                                    <LocalHospital color="primary" sx={{ fontSize: 30 }} />
-                                    <Typography variant="h5" fontWeight={700}>SHREE RAVI SUPER SPECIALITY HOSPITAL</Typography>
-                                </Stack>
-                                <Typography variant="body2" sx={{ color: 'grey.500', maxWidth: 500, mx: 'auto', lineHeight: 1.8 }}>
-                                    Marnstack Medical Center is a JCI accredited facility committed to providing the highest standards of healthcare excellence and patient safety.
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        {/* <Grid item xs={6} md={2}>
-                            <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 3, color: 'white' }}>Quick Links</Typography>
-                            <Stack spacing={1.5}>
-                                {['About Us', 'Find a Doctor', 'Services', 'Quality & Safety', 'Contact'].map(link => (
-                                    <Typography key={link} variant="body2" sx={{ color: 'grey.500', cursor: 'pointer', transition: '0.2s', '&:hover': { color: theme.palette.primary.main } }}>{link}</Typography>
-                                ))}
-                            </Stack>
-                        </Grid> */}
-                        {/* <Grid item xs={6} md={2}>
-                            <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 3, color: 'white' }}>Departments</Typography>
-                            <Stack spacing={1.5}>
-                                {['Cardiology Center', 'Neuroscience Institute', 'Cancer Center', 'Orthopedics', 'Women\'s Health'].map(link => (
-                                    <Typography key={link} variant="body2" sx={{ color: 'grey.500', cursor: 'pointer', transition: '0.2s', '&:hover': { color: theme.palette.primary.main } }}>{link}</Typography>
-                                ))}
-                            </Stack>
-                        </Grid> */}
-                        {/* <Grid item xs={12} md={4}>
-                            <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 3, color: 'white' }}>Stay Connected</Typography>
-                            <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
-                                <Box component="input" placeholder="Enter your email" sx={{
-                                    flex: 1, px: 2, py: 1.5, borderRadius: '8px', border: '1px solid #333', bgcolor: '#2C3E50', color: 'white', outline: 'none',
-                                    '&:focus': { borderColor: theme.palette.primary.main }
-                                }} />
-                                <Button variant="contained">Subscribe</Button>
-                            </Box>
-                            <Stack direction="row" spacing={2}>
-                                <IconButton sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.05)' }}><Facebook /></IconButton>
-                                <IconButton sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.05)' }}><Twitter /></IconButton>
-                                <IconButton sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.05)' }}><LinkedIn /></IconButton>
-                                <IconButton sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.05)' }}><Instagram /></IconButton>
-                            </Stack>
-                        </Grid> */}
-                    </Grid>
-                    <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', mt: 8, pt: 4, textAlign: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'grey.600' }}>
-                            &copy; 2025 Marnstack Medical Center. Privacy Policy | Terms of Service
+                    {/* Informative Ecosystem */}
+                    <Box sx={{ mt: 15 }}>
+                        <Typography variant="h3" sx={{ fontWeight: 900, mb: 6, textAlign: 'center' }}>
+                            Platform Capabilities
                         </Typography>
+                        <Grid container spacing={3}>
+                            {[
+                                { title: 'Unified Ledger', desc: 'Immutable medical history tracking across hospital nodes.', icon: Assignment, color: '#0ea5e9' },
+                                { title: 'Rapid Sync', desc: 'Sub-second synchronization for ultra-responsive care.', icon: Speed, color: '#10b981' },
+                                { title: 'Medical Records', desc: 'Enterprise every medical record with proper patient and doctor identity.', icon: Security, color: '#6366f1' },
+                                { title: 'Appointment Scheduling', desc: 'Appoinment scheduling by patient to doctor by ensuring date and time availability.', icon: CloudQueue, color: '#0ea5e9' }
+                            ].map((info, i) => (
+                                <Grid item xs={12} sm={6} md={3} key={i}>
+                                    <Box className="glass" sx={{
+                                        p: 4,
+                                        borderRadius: '24px',
+                                        height: '100%',
+                                        border: '1px solid rgba(255,255,255,0.4)',
+                                    }}>
+                                        <info.icon sx={{ fontSize: 40, color: info.color, mb: 2 }} />
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 1.5, color: '#0f172a' }}>{info.title}</Typography>
+                                        <Typography variant="caption" sx={{ color: '#64748b', lineHeight: 1.6, display: 'block' }}>{info.desc}</Typography>
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
+
+                    {/* How It Works Section */}
+                    <Box sx={{ mt: 15, position: 'relative' }}>
+                        <Paper elevation={0} sx={{
+                            p: { xs: 4, md: 8 },
+                            borderRadius: '48px',
+                            bgcolor: '#0f172a',
+                            color: 'white',
+                            overflow: 'hidden',
+                            position: 'relative'
+                        }}>
+                            {/* Decorative background circle */}
+                            <Box sx={{
+                                position: 'absolute', top: -100, right: -100, width: 300, height: 300,
+                                bgcolor: 'primary.main', borderRadius: '50%', filter: 'blur(100px)', opacity: 0.1
+                            }} />
+
+                            <Grid container spacing={8} alignItems="center">
+                                <Grid item xs={12} md={6}>
+                                    <Typography variant="h2" sx={{ color: 'white', mb: 4 }}>
+                                        Engineered for <br />
+                                        <Box component="span" sx={{ color: 'primary.light' }}>Performance</Box>
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)', mb: 6 }}>
+                                        Our architecture prioritize interoperability and zero-latency data access, ensuring that life-critical information is always where it belongs: in the hands of care providers.
+                                    </Typography>
+                                    <Stack spacing={4}>
+                                        {[
+                                            { title: 'Strict Verification', desc: 'Secure onboarding for medical staff and patients.' },
+                                            { title: 'Metadata Indexing', desc: 'Instant search across millions of health records.' },
+                                            { title: 'Real-time Audit', desc: 'Complete transparency on data access and changes.' }
+                                        ].map((step, i) => (
+                                            <Box key={i} sx={{ display: 'flex', gap: 3 }}>
+                                                <Box sx={{
+                                                    width: 32, height: 32, borderRadius: '50%',
+                                                    bgcolor: 'primary.main', display: 'flex',
+                                                    alignItems: 'center', justifyContent: 'center',
+                                                    flexShrink: 0
+                                                }}>
+                                                    <Typography variant="caption" fontWeight={900}>{i + 1}</Typography>
+                                                </Box>
+                                                <Box>
+                                                    <Typography variant="subtitle1" fontWeight={800}>{step.title}</Typography>
+                                                    <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>{step.desc}</Typography>
+                                                </Box>
+                                            </Box>
+                                        ))}
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Box className="glass" sx={{
+                                        p: 5, borderRadius: '32px',
+                                        bgcolor: 'rgba(255,255,255,0.03) !important',
+                                        border: '1px solid rgba(255,255,255,0.1) !important'
+                                    }}>
+                                        <Stack spacing={4}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                <Avatar sx={{ bgcolor: 'secondary.main', width: 56, height: 56 }}><Security /></Avatar>
+                                                <Box>
+                                                    <Typography variant="subtitle1" fontWeight={800}>Sovereign Identity</Typography>
+                                                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>Blockchain-inspired data integrity protocols.</Typography>
+                                                </Box>
+                                            </Box>
+                                            <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}><Speed /></Avatar>
+                                                <Box>
+                                                    <Typography variant="subtitle1" fontWeight={800}>Sub-ms Latency</Typography>
+                                                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>Optimized for emergency medical response.</Typography>
+                                                </Box>
+                                            </Box>
+                                            {/* <Button variant="contained" fullWidth sx={{ mt: 2, height: 56 }}>
+                                                Deep Dive into Architecture
+                                            </Button> */}
+                                        </Stack>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </Paper>
                     </Box>
                 </Container>
             </Box>
 
+            {/* Premium Footer */}
+            <Box sx={{ py: 8, bgcolor: 'white', borderTop: '1px solid #f1f5f9', mt: 10 }}>
+                <Container maxWidth="xl">
+                    <Grid container spacing={4} sx={{ mb: 6 }}>
+                        <Grid item xs={12} md={4}>
+                            <Typography variant="h6" fontWeight={900} sx={{ mb: 2 }}>HPDOS</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Leading the transformation in digital healthcare delivery through precision data management.
+                            </Typography>
+                        </Grid>
+                        {/* <Grid item xs={6} md={2}>
+                            <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 2 }}>Platform</Typography>
+                            <Stack spacing={1}>
+                                <Typography variant="caption" color="text.secondary">Architecture</Typography>
+                                <Typography variant="caption" color="text.secondary">Security</Typography>
+                                <Typography variant="caption" color="text.secondary">Compliance</Typography>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={6} md={2}>
+                            <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 2 }}>Resources</Typography>
+                            <Stack spacing={1}>
+                                <Typography variant="caption" color="text.secondary">API Docs</Typography>
+                                <Typography variant="caption" color="text.secondary">Support</Typography>
+                                <Typography variant="caption" color="text.secondary">Logs</Typography>
+                            </Stack>
+                        </Grid> */}
+                         <Divider sx={{ mb: 4 }} />
+                         <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2}>
+                        <Typography variant="caption" color="text.secondary">
+                            © 2025 HOPDS International. Global Stable Release 2.4.0
+                        </Typography>
+                        <Stack direction="row" spacing={10}>
+                            <Typography variant="caption" fontWeight={700} color="text.secondary">Terms</Typography>
+                            <Typography variant="caption" fontWeight={700} color="text.secondary">Privacy</Typography>
+                            <Typography variant="caption" fontWeight={700} color="text.secondary">GDPR</Typography>
+                        </Stack>
+                    </Stack>
+                    </Grid>
+                    <Divider sx={{ mb: 4 }} />
+                    {/* <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2}>
+                        <Typography variant="caption" color="text.secondary">
+                            © 2025 HPDOS International. Global Stable Release 2.4.0
+                        </Typography>
+                        <Stack direction="row" spacing={4}>
+                            <Typography variant="caption" fontWeight={700} color="text.secondary">Terms</Typography>
+                            <Typography variant="caption" fontWeight={700} color="text.secondary">Privacy</Typography>
+                            <Typography variant="caption" fontWeight={700} color="text.secondary">GDPR</Typography>
+                        </Stack>
+                    </Stack> */}
+                </Container>
+            </Box>
         </Box>
     );
 };

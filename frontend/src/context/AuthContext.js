@@ -57,13 +57,13 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       return { success: true, user };
     } catch (error) {
-      // Extract error message from response
+     
       let errorMessage = 'Registration failed';
-      
+
       if (error.response?.data) {
-        // Use the message from backend if available
+       
         errorMessage = error.response.data.message || errorMessage;
-        
+
         // If there are validation errors, format them nicely
         if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
           const validationErrors = error.response.data.errors
@@ -76,10 +76,22 @@ export const AuthProvider = ({ children }) => {
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       return {
         success: false,
         message: errorMessage
+      };
+    }
+  };
+
+  const resetPassword = async (email, newPassword) => {
+    try {
+      const response = await axios.post('/api/auth/reset-password', { email, newPassword });
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Password reset failed'
       };
     }
   };
@@ -92,7 +104,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, resetPassword, logout }}>
       {children}
     </AuthContext.Provider>
   );

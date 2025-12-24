@@ -14,7 +14,10 @@ import {
   IconButton,
   CircularProgress,
   AppBar,
-  Toolbar
+  Toolbar,
+  alpha,
+  useTheme,
+  Stack
 } from '@mui/material';
 import {
   Person,
@@ -23,17 +26,21 @@ import {
   Cancel,
   CameraAlt,
   Logout,
-  ArrowBack
+  ArrowBack,
+  LocalHospital,
+  Email,
+  Phone,
+  LocationOn
 } from '@mui/icons-material';
 import { AuthContext } from '../context/AuthContext';
-import PageHeader from '../components/common/PageHeader';
 import axios from 'axios';
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const theme = useTheme();
   const fileInputRef = useRef(null);
-  
+
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -70,21 +77,30 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData(prev => ({
+        ...prev,
+        [parent]: {
+          ...(prev[parent] || {}), // Null safety
+          [child]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setMessage('Please select an image file');
         return;
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setMessage('Image size should be less than 5MB');
         return;
@@ -113,13 +129,11 @@ const Profile = () => {
       } else {
         endpoint = `/api/${user.role}s/me`;
       }
-      
+
       const response = await axios.patch(endpoint, formData);
       setProfileData(response.data);
       setIsEditing(false);
       setMessage('Profile updated successfully!');
-      
-      // Update user context if needed
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -160,54 +174,56 @@ const Profile = () => {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <AppBar position="static" color="transparent" elevation={0} sx={{ bgcolor: 'white', borderBottom: '1px solid', borderColor: 'divider' }}>
-        <Toolbar>
-          <IconButton onClick={() => navigate(`/${user.role}`)} sx={{ mr: 2 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: 4 }}>
+      {/* Navigation */}
+      <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)', borderBottom: '1px solid', borderColor: 'divider' }}>
+        <Toolbar sx={{ gap: 2 }}>
+          <IconButton onClick={() => navigate(`/${user.role}`)} sx={{ bgcolor: alpha(theme.palette.primary.main, 0.1), color: 'primary.main', '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.2) } }}>
             <ArrowBack />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: 'text.primary' }}>
-            My Profile
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: 'text.primary', letterSpacing: '-0.02em' }}>
+            My<Box component="span" sx={{ color: 'primary.main' }}>Profile</Box>
           </Typography>
           <Button
-            variant="outlined"
+            variant="contained"
             color="error"
             onClick={handleLogout}
             startIcon={<Logout />}
+            sx={{ borderRadius: '10px', boxShadow: 'none' }}
           >
             Logout
           </Button>
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: 6, mb: 4 }}>
         {message && (
-          <Alert 
-            severity={message.includes('Error') ? 'error' : 'success'} 
-            sx={{ mb: 3 }}
+          <Alert
+            severity={message.includes('Error') ? 'error' : 'success'}
+            sx={{ mb: 4, borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}
             onClose={() => setMessage('')}
           >
             {message}
           </Alert>
         )}
 
-        <Paper elevation={0} sx={{ p: 4, border: '1px solid', borderColor: 'divider', borderRadius: 3 }}>
-          <Grid container spacing={4}>
-            {/* Profile Picture Section */}
-            <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-              <Box sx={{ position: 'relative', display: 'inline-block' }}>
+        <Grid container spacing={4}>
+          {/* Sidebar / Profile Card */}
+          <Grid item xs={12} md={4}>
+            <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', border: '1px solid', borderColor: 'divider', background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', textAlign: 'center', position: 'sticky', top: 100 }}>
+              <Box sx={{ position: 'relative', display: 'inline-block', mb: 3 }}>
                 <Avatar
                   src={previewImage}
                   sx={{
-                    width: 150,
-                    height: 150,
+                    width: 160,
+                    height: 160,
                     margin: '0 auto',
-                    bgcolor: 'primary.main',
-                    fontSize: '3.5rem',
-                    mb: 2,
-                    border: '4px solid',
-                    borderColor: 'primary.light',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    color: 'primary.main',
+                    fontSize: '4rem',
+                    fontWeight: 700,
+                    border: '6px solid white',
+                    boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)'
                   }}
                 >
                   {!previewImage && getInitials()}
@@ -216,18 +232,17 @@ const Profile = () => {
                   <IconButton
                     sx={{
                       position: 'absolute',
-                      bottom: 20,
-                      right: 'calc(50% - 75px)',
+                      bottom: 8,
+                      right: 8,
                       bgcolor: 'primary.main',
                       color: 'white',
-                      '&:hover': {
-                        bgcolor: 'primary.dark',
-                      },
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                      border: '4px solid white',
+                      '&:hover': { bgcolor: 'primary.dark' },
+                      boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
                     }}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <CameraAlt />
+                    <CameraAlt fontSize="small" />
                   </IconButton>
                 )}
                 <input
@@ -238,109 +253,100 @@ const Profile = () => {
                   onChange={handleImageChange}
                 />
               </Box>
-              <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+
+              <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.5 }}>
                 {profileData?.firstName && profileData?.lastName
                   ? `${profileData.firstName} ${profileData.lastName}`
                   : profileData?.name || 'User'}
               </Typography>
-              <Typography variant="body1" color="text.secondary" gutterBottom>
-                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              <Typography variant="body1" sx={{ color: 'primary.main', fontWeight: 600, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.1em', mb: 3 }}>
+                {user.role}
               </Typography>
-              <Box sx={{ mt: 2 }}>
-                {!isEditing ? (
+
+              <Stack spacing={2} sx={{ mb: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, bgcolor: 'white', borderRadius: '16px', border: '1px solid', borderColor: 'divider' }}>
+                  <Email color="primary" fontSize="small" />
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {user?.email || profileData?.email}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, bgcolor: 'white', borderRadius: '16px', border: '1px solid', borderColor: 'divider' }}>
+                  <Phone color="primary" fontSize="small" />
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                    {profileData?.phone || 'No phone set'}
+                  </Typography>
+                </Box>
+              </Stack>
+
+              {!isEditing ? (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  startIcon={<Edit />}
+                  onClick={() => setIsEditing(true)}
+                  sx={{
+                    py: 1.5,
+                    borderRadius: '16px',
+                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                    boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`
+                  }}
+                >
+                  Edit Profile
+                </Button>
+              ) : (
+                <Stack direction="row" spacing={2}>
                   <Button
+                    fullWidth
                     variant="contained"
-                    startIcon={<Edit />}
-                    onClick={() => setIsEditing(true)}
+                    startIcon={<Save />}
+                    onClick={handleSave}
+                    disabled={saving}
                     sx={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #5568d3 0%, #653a8f 100%)',
-                      },
+                      py: 1.5,
+                      borderRadius: '16px',
+                      background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+                      boxShadow: `0 8px 20px ${alpha(theme.palette.secondary.main, 0.3)}`
                     }}
                   >
-                    Edit Profile
+                    {saving ? <CircularProgress size={24} color="inherit" /> : 'Save'}
                   </Button>
-                ) : (
-                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                    <Button
-                      variant="contained"
-                      startIcon={<Save />}
-                      onClick={handleSave}
-                      disabled={saving}
-                      sx={{
-                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                        '&:hover': {
-                          background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-                        },
-                      }}
-                    >
-                      {saving ? <CircularProgress size={20} /> : 'Save'}
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      startIcon={<Cancel />}
-                      onClick={handleCancel}
-                      disabled={saving}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                )}
-              </Box>
-            </Grid>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    startIcon={<Cancel />}
+                    onClick={handleCancel}
+                    disabled={saving}
+                    sx={{ py: 1.5, borderRadius: '16px' }}
+                  >
+                    Cancel
+                  </Button>
+                </Stack>
+              )}
+            </Paper>
+          </Grid>
 
-            {/* Form Section */}
-            <Grid item xs={12} md={8}>
-              <Typography variant="h6" gutterBottom sx={{ borderBottom: 1, borderColor: 'divider', pb: 1, mb: 3, fontWeight: 600 }}>
-                Personal Details
+          {/* Form Content */}
+          <Grid item xs={12} md={8}>
+            <Paper elevation={0} sx={{ p: 5, borderRadius: '32px', border: '1px solid', borderColor: 'divider', background: 'white' }}>
+              <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ width: 8, height: 24, bgcolor: 'primary.main', borderRadius: 1 }} />
+                Account Settings
               </Typography>
+
               <Grid container spacing={3}>
                 {user.role === 'patient' && (
                   <>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="First Name"
-                        name="firstName"
-                        value={formData?.firstName || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="First Name" name="firstName" value={formData?.firstName || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Last Name"
-                        name="lastName"
-                        value={formData?.lastName || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="Last Name" name="lastName" value={formData?.lastName || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Date of Birth"
-                        name="dateOfBirth"
-                        type="date"
-                        value={formData?.dateOfBirth ? new Date(formData.dateOfBirth).toISOString().split('T')[0] : ''}
-                        onChange={handleInputChange}
-                        disabled={true}
-                        InputLabelProps={{ shrink: true }}
-                      />
+                      <TextField fullWidth label="Date of Birth" name="dateOfBirth" type="date" value={formData?.dateOfBirth ? new Date(formData.dateOfBirth).toISOString().split('T')[0] : ''} disabled={true} InputLabelProps={{ shrink: true }} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Gender"
-                        name="gender"
-                        value={formData?.gender || ''}
-                        onChange={handleInputChange}
-                        disabled={true}
-                      />
+                      <TextField fullWidth label="Gender" name="gender" value={formData?.gender || ''} disabled={true} />
                     </Grid>
                   </>
                 )}
@@ -348,89 +354,25 @@ const Profile = () => {
                 {user.role === 'doctor' && (
                   <>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="First Name"
-                        name="firstName"
-                        value={formData?.firstName || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="First Name" name="firstName" value={formData?.firstName || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Last Name"
-                        name="lastName"
-                        value={formData?.lastName || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="Last Name" name="lastName" value={formData?.lastName || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Specialization"
-                        name="specialization"
-                        value={formData?.specialization || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="Specialization" name="specialization" value={formData?.specialization || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Department"
-                        name="department"
-                        value={formData?.department || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="Qualification" name="qualification" value={formData?.qualification || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="License Number"
-                        name="licenseNumber"
-                        value={formData?.licenseNumber || ''}
-                        disabled={true}
-                      />
+                      <TextField fullWidth label="Experience (years)" name="experience" type="number" value={formData?.experience || 0} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Qualification"
-                        name="qualification"
-                        value={formData?.qualification || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                      />
+                      <TextField fullWidth label="Consultation Fee" name="consultationFee" type="number" value={formData?.consultationFee || 0} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Experience (years)"
-                        name="experience"
-                        type="number"
-                        value={formData?.experience || 0}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Consultation Fee"
-                        name="consultationFee"
-                        type="number"
-                        value={formData?.consultationFee || 0}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                      />
+                      <TextField fullWidth label="Department" name="department" value={formData?.department || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                   </>
                 )}
@@ -438,114 +380,45 @@ const Profile = () => {
                 {user.role === 'hospital' && (
                   <>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Hospital Name"
-                        name="name"
-                        value={formData?.name || ''}
-                        onChange={handleInputChange}
-                        disabled={!isEditing}
-                        required
-                      />
+                      <TextField fullWidth label="Hospital Name" name="name" value={formData?.name || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Registration Number"
-                        name="registrationNumber"
-                        value={formData?.registrationNumber || ''}
-                        disabled={true}
-                      />
+                      <TextField fullWidth label="Reg. Number" name="registrationNumber" value={formData?.registrationNumber || ''} disabled={true} />
                     </Grid>
                   </>
                 )}
 
-                {/* Common Fields */}
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    value={user?.email || formData?.email || ''}
-                    disabled={true}
-                  />
+                  <TextField fullWidth label="Email" value={user?.email || formData?.email} disabled={true} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Phone"
-                    name="phone"
-                    value={formData?.phone || ''}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    required
-                  />
+                  <TextField fullWidth label="Phone" name="phone" value={formData?.phone || ''} onChange={handleInputChange} disabled={!isEditing} />
                 </Grid>
 
-                {/* Address Fields for Patient and Hospital */}
+                {/* Address Section */}
                 {(user.role === 'patient' || user.role === 'hospital') && (
                   <>
-                    <Grid item xs={12}>
-                      <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                        Address
+                    <Grid item xs={12} sx={{ mt: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 800, mb: 1, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Box sx={{ width: 8, height: 24, bgcolor: 'secondary.main', borderRadius: 1 }} />
+                        Location Details
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Street"
-                        name="address.street"
-                        value={formData?.address?.street || ''}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          address: { ...prev.address, street: e.target.value }
-                        }))}
-                        disabled={!isEditing}
-                      />
+                    <Grid item xs={12}>
+                      <TextField fullWidth label="Street Address" name="address.street" value={formData?.address?.street || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="City"
-                        name="address.city"
-                        value={formData?.address?.city || ''}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          address: { ...prev.address, city: e.target.value }
-                        }))}
-                        disabled={!isEditing}
-                      />
+                    <Grid item xs={12} sm={4}>
+                      <TextField fullWidth label="City" name="address.city" value={formData?.address?.city || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="State"
-                        name="address.state"
-                        value={formData?.address?.state || ''}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          address: { ...prev.address, state: e.target.value }
-                        }))}
-                        disabled={!isEditing}
-                      />
+                    <Grid item xs={12} sm={4}>
+                      <TextField fullWidth label="State" name="address.state" value={formData?.address?.state || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Zip Code"
-                        name="address.zipCode"
-                        value={formData?.address?.zipCode || ''}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          address: { ...prev.address, zipCode: e.target.value }
-                        }))}
-                        disabled={!isEditing}
-                      />
+                    <Grid item xs={12} sm={4}>
+                      <TextField fullWidth label="Zip Code" name="address.zipCode" value={formData?.address?.zipCode || ''} onChange={handleInputChange} disabled={!isEditing} />
                     </Grid>
                   </>
                 )}
 
-                {/* Patient Specific Fields */}
                 {user.role === 'patient' && (
                   <>
                     <Grid item xs={12} sm={6}>
@@ -558,14 +431,9 @@ const Profile = () => {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                       >
-                        <MenuItem value="A+">A+</MenuItem>
-                        <MenuItem value="A-">A-</MenuItem>
-                        <MenuItem value="B+">B+</MenuItem>
-                        <MenuItem value="B-">B-</MenuItem>
-                        <MenuItem value="AB+">AB+</MenuItem>
-                        <MenuItem value="AB-">AB-</MenuItem>
-                        <MenuItem value="O+">O+</MenuItem>
-                        <MenuItem value="O-">O-</MenuItem>
+                        {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(group => (
+                          <MenuItem key={group} value={group}>{group}</MenuItem>
+                        ))}
                       </TextField>
                     </Grid>
                     <Grid item xs={12}>
@@ -585,7 +453,6 @@ const Profile = () => {
                   </>
                 )}
 
-                {/* Hospital Specific Fields */}
                 {user.role === 'hospital' && (
                   <Grid item xs={12}>
                     <TextField
@@ -603,9 +470,9 @@ const Profile = () => {
                   </Grid>
                 )}
               </Grid>
-            </Grid>
+            </Paper>
           </Grid>
-        </Paper>
+        </Grid>
       </Container>
     </Box>
   );
