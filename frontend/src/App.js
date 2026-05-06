@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeContextProvider } from './context/ThemeContext';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -11,11 +11,10 @@ import DoctorDashboard from './pages/DoctorDashboard';
 import HospitalDashboard from './pages/HospitalDashboard';
 import Profile from './pages/Profile';
 import HomePage from './pages/HomePage';
-import theme from './theme';
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeContextProvider>
       <CssBaseline />
       <AuthProvider>
         <Router>
@@ -58,7 +57,7 @@ function App() {
           </Routes>
         </Router>
       </AuthProvider>
-    </ThemeProvider>
+    </ThemeContextProvider>
   );
 }
 

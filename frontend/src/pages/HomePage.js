@@ -1,434 +1,545 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    AppBar,
-    Box,
-    Toolbar,
-    Typography,
-    Button,
-    Container,
-    Grid,
-    Card,
-    CardContent,
-    Paper,
-    Stack,
-    useTheme,
-    Chip,
-    Avatar,
-    Divider
+  Box,
+  Typography,
+  Button,
+  Container,
+  Grid,
+  Chip,
+  Avatar,
+  AvatarGroup,
+  Stack,
+  useTheme,
+  IconButton,
+  Divider
 } from '@mui/material';
 import {
-    LocalHospital,
-    People,
-    MedicalServices,
-    CalendarToday,
-    Assignment,
-    Security,
-    Speed,
-    CloudQueue,
-    Login as LoginIcon
+  LocalHospital,
+  ArrowForward,
+  CalendarToday,
+  AutoGraph,
+  LightMode,
+  DarkMode,
+  Security,
+  Speed,
+  Devices,
+  CheckCircleOutline,
+  Facebook,
+  Twitter,
+  LinkedIn,
+  Instagram,
+  GitHub,
+  Email,
+  Phone
 } from '@mui/icons-material';
-import StatsCard from '../components/common/StatsCard';
+import { ThemeContext } from '../context/ThemeContext';
 
 const HomePage = () => {
-    const navigate = useNavigate();
-    const theme = useTheme();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const { toggleColorMode, mode } = useContext(ThemeContext);
 
-    const portalTiles = [
-        {
-            title: 'Patient Portal',
-            desc: 'Seamlessly access your medical journey, prescriptions, and expert care.',
-            icon: People,
-            color: '#0ea5e9',
-            path: '/login',
-            role: 'patient',
-            features: ['Smart Appointments', 'Digital Prescriptions', 'Health Analytics'],
-            gradient: 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)'
-        },
-        {
-            title: 'Doctor Portal',
-            desc: 'Empowering physicians with real-time data and clinical precision.',
-            icon: MedicalServices,
-            color: '#10b981',
-            path: '/login',
-            role: 'doctor',
-            features: ['Live Diagnostics', 'Patient Triage', 'Rapid Documentation'],
-            gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-        },
-        {
-            title: 'Administration',
-            desc: 'The nerve center of hospital operations and enterprise management.',
-            icon: LocalHospital,
-            color: '#6366f1',
-            path: '/login',
-            role: 'hospital',
-            features: ['System Intelligence', 'Resource Audit', 'Enterprise Security'],
-            gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'
-        }
-    ];
+  const features = [
+    {
+      icon: <Security sx={{ fontSize: 40, color: 'primary.main' }} />,
+      title: 'Bank-Grade Security',
+      description: 'Your medical records are encrypted end-to-end. We adhere to the highest healthcare data compliance standards.'
+    },
+    {
+      icon: <Speed sx={{ fontSize: 40, color: 'primary.main' }} />,
+      title: 'Instant Booking',
+      description: 'Skip the waiting room. See doctor availability in real-time and book appointments instantly from your dashboard.'
+    },
+    {
+      icon: <Devices sx={{ fontSize: 40, color: 'primary.main' }} />,
+      title: 'Universal Access',
+      description: 'Access your patient portal from any device—desktop, tablet, or smartphone. Your health data, anywhere you go.'
+    }
+  ];
 
-    const systemStats = [
-        { title: 'Global Patients', value: '12.4k', icon: People, color: '#0ea5e9' },
-        { title: 'Medical Experts', value: '450+', icon: MedicalServices, color: '#10b981' },
-        { title: 'Uptime Rate', value: '99.9%', icon: Speed, color: '#6366f1' },
-        { title: 'Daily Consults', value: '128', icon: CalendarToday, color: '#f59e0b' }
-    ];
+  const steps = [
+    {
+      step: '01',
+      title: 'Create an Account',
+      description: 'Sign up in seconds. Choose whether you are a patient, doctor, or hospital administrator.'
+    },
+    {
+      step: '02',
+      title: 'Complete Profile',
+      description: 'Add your medical history or professional credentials to unlock the full power of the HOPDS portal.'
+    },
+    {
+      step: '03',
+      title: 'Manage Health',
+      description: 'Book appointments, view prescriptions, or manage your clinic schedule seamlessly.'
+    }
+  ];
 
-    return (
-        <Box sx={{
-            bgcolor: '#f8fafc',
-            minHeight: '100vh',
+  return (
+    <Box 
+      sx={{ 
+        bgcolor: 'background.default',
+        fontFamily: "'Inter', sans-serif",
+        overflow: 'hidden'
+      }}
+    >
+      {/* Hero Section Container */}
+      <Box sx={{ p: { xs: 2, md: 4 } }}>
+        <Box 
+          sx={{ 
+            background: theme.palette.background.paper,
+            borderRadius: { xs: '32px', md: '48px' },
+            boxShadow: theme.palette.mode === 'light' 
+                ? '0 25px 50px -12px rgba(37,99,235,0.1)' 
+                : '0 25px 50px -12px rgba(0,0,0,0.5)',
+            minHeight: 'calc(100vh - 64px)',
+            position: 'relative',
+            overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            position: 'relative',
-            overflow: 'hidden'
-        }}>
-            {/* Background Decorative Elements */}
-            <Box sx={{
-                position: 'absolute', top: -100, right: -100, width: 400, height: 400,
-                background: 'radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%)',
-                zIndex: 0
-            }} />
-            <Box sx={{
-                position: 'absolute', bottom: -100, left: -100, width: 500, height: 500,
-                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%)',
-                zIndex: 0
-            }} />
+            border: `1px solid ${theme.palette.divider}`
+          }}
+        >
+          {/* Navigation Bar inside Hero Container */}
+          <Box sx={{ p: { xs: 3, md: 5 }, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ p: 1.5, bgcolor: 'primary.main', borderRadius: '16px', color: '#fff', display: 'flex' }}>
+                <LocalHospital sx={{ fontSize: 28 }} />
+              </Box>
+              <Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary', letterSpacing: '-0.03em' }}>
+                HOPDS<Box component="span" sx={{ color: 'primary.main' }}> Portal</Box>
+              </Typography>
+            </Box>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <IconButton onClick={toggleColorMode} sx={{ color: 'text.primary' }}>
+                  {mode === 'dark' ? <LightMode /> : <DarkMode />}
+              </IconButton>
+              <Button 
+                  onClick={() => navigate('/login')}
+                  sx={{ 
+                      color: 'text.primary', 
+                      fontWeight: 700, 
+                      borderRadius: '9999px',
+                      px: 3,
+                      '&:hover': { bgcolor: 'action.hover' }
+                  }}
+              >
+                Log In
+              </Button>
+              <Button 
+                  variant="contained" 
+                  onClick={() => navigate('/register')}
+                  sx={{ 
+                      bgcolor: 'text.primary', 
+                      color: 'background.paper', 
+                      borderRadius: '9999px',
+                      px: 4, py: 1.5,
+                      fontWeight: 700,
+                      boxShadow: theme.palette.mode === 'light' ? '0 10px 25px -5px rgba(15,23,42,0.3)' : '0 10px 25px -5px rgba(255,255,255,0.1)',
+                      '&:hover': { bgcolor: 'text.secondary', color: 'background.paper' }
+                  }}
+              >
+                Get Started
+              </Button>
+            </Stack>
+          </Box>
 
-            {/* Premium Navbar */}
-            <AppBar position="fixed" elevation={0} className="glass">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: '80px' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <Box sx={{
-                                width: 45, height: 45, borderRadius: '14px',
-                                background: 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 8px 16px -4px rgba(14, 165, 233, 0.5)'
-                            }}>
-                                <LocalHospital sx={{ color: '#fff', fontSize: 28 }} />
-                            </Box>
-                            <Box>
-                                <Typography variant="h6" sx={{
-                                    fontWeight: 900, fontSize: '1.4rem', color: '#0f172a',
-                                    letterSpacing: '-0.04em', lineHeight: 1
-                                }}>
-                                    HOPDS (Hopital online patient data management system)
-                                </Typography>
-                                <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                                    Precision Control
-                                </Typography>
-                            </Box>
-                        </Box>
+          {/* Main Content Area */}
+          <Container maxWidth="xl" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', pb: 10 }}>
+            <Grid container spacing={8} alignItems="center">
+              
+              {/* Left Column: Text & Call to Action */}
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Chip 
+                    icon={<AutoGraph sx={{ color: 'primary.main' }} />}
+                    label="Hospital Online Patient Data System" 
+                    sx={{ 
+                        bgcolor: theme.palette.mode === 'light' ? '#eff6ff' : 'rgba(37, 99, 235, 0.1)', 
+                        color: 'primary.main', 
+                        fontWeight: 800, 
+                        borderRadius: '9999px',
+                        px: 1, py: 2.5,
+                        mb: 4,
+                        border: `1px solid ${theme.palette.mode === 'light' ? '#bfdbfe' : 'rgba(37, 99, 235, 0.2)'}`
+                    }} 
+                  />
+                  <Typography 
+                    variant="h1" 
+                    sx={{ 
+                        color: 'text.primary', 
+                        mb: 3
+                    }}
+                  >
+                    Streamline Your<br />
+                    <Box component="span" sx={{ color: 'primary.main' }}>Healthcare.</Box>
+                  </Typography>
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                        color: 'text.secondary', 
+                        fontWeight: 500, 
+                        lineHeight: 1.6, 
+                        mb: 6,
+                        maxWidth: '85%'
+                    }}
+                  >
+                    Manage appointments, securely access medical records, and connect with top specialists through our advanced hospital portal.
+                  </Typography>
+                  
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mb: 8 }}>
+                    <Button 
+                        variant="contained" 
+                        onClick={() => navigate('/login')}
+                        endIcon={<ArrowForward />}
+                        sx={{ 
+                            bgcolor: 'primary.main', 
+                            color: '#fff', 
+                            borderRadius: '9999px',
+                            px: 5, py: 2,
+                            fontWeight: 800,
+                            fontSize: '1.1rem',
+                            boxShadow: theme.palette.mode === 'light' ? '0 20px 40px -10px rgba(37,99,235,0.5)' : 'none',
+                            transition: 'all 0.3s',
+                            '&:hover': { bgcolor: 'primary.dark', transform: 'translateY(-4px)' }
+                        }}
+                    >
+                      Enter Portal
+                    </Button>
+                  </Stack>
 
-                        <Stack direction="row" spacing={3} alignItems="center">
-                            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5, px: 2, py: 0.5, borderRadius: '20px', bgcolor: 'rgba(16, 185, 129, 0.1)' }}>
-                                <Box sx={{ width: 8, height: 8, bgcolor: '#10b981', borderRadius: '50%', boxShadow: '0 0 10px #10b981' }} />
-                                <Typography variant="caption" sx={{ fontWeight: 800, color: '#047857' }}>SYSTEM LIVE</Typography>
-                            </Box>
-                            <Button
-                                variant="contained"
-                                startIcon={<LoginIcon />}
-                                onClick={() => navigate('/login')}
-                                sx={{
-                                    borderRadius: '14px',
-                                    px: 4,
-                                    boxShadow: '0 10px 20px -5px rgba(14, 165, 233, 0.4)'
-                                }}
-                            >
-                                Login
-                            </Button>
-                        </Stack>
-                    </Toolbar>
-                </Container>
-            </AppBar>
+                  {/* Trust Badges */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                          <CheckCircleOutline sx={{ color: '#10b981' }} />
+                          <CheckCircleOutline sx={{ color: '#10b981' }} />
+                          <CheckCircleOutline sx={{ color: '#10b981' }} />
+                      </Box>
+                      <Box>
+                          <Typography variant="body1" fontWeight={800} color="text.primary">Secure. Fast. Reliable.</Typography>
+                          <Typography variant="body2" color="text.secondary" fontWeight={600}>Built for modern healthcare.</Typography>
+                      </Box>
+                  </Box>
+                </Box>
+              </Grid>
 
-            {/* Hero Section */}
-            <Box sx={{ pt: '140px', pb: 10, position: 'relative', zIndex: 1 }}>
-                <Container maxWidth="lg">
-                    <Box sx={{ textAlign: 'center', mb: 10 }}>
-                        <Chip
-                            label="Next-Gen Healthcare"
-                            size="small"
-                            sx={{
-                                mb: 3,
-                                fontWeight: 800,
-                                bgcolor: 'rgba(14, 165, 233, 0.1)',
-                                color: 'primary.main',
-                                border: '1px solid rgba(14, 165, 233, 0.2)',
-                                px: 1
-                            }}
-                        />
-                        <Typography variant="h1" sx={{ color: '#0f172a', mb: 3 }}>
-                            Unified Healthcare<br />
-                            <Box component="span" sx={{
-                                background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                            }}>Management Dashboard</Box>
-                        </Typography>
-                        <Typography variant="h6" sx={{ color: '#64748b', mb: 5, maxWidth: '700px', mx: 'auto', fontWeight: 500 }}>
-                            HOPDS (Hopital oline patient data management system) bridges the gap between clinicians, patients, and administrators with a secure, real-time data ecosystem optimized for performance.
-                        </Typography>
-
-                        {/* <Grid container spacing={4} sx={{ mt: 2 }}>
-                            {systemStats.map((stat, idx) => (
-                                <Grid item xs={6} md={3} key={idx}>
-                                    <Box sx={{
-                                        p: 3,
-                                        borderRadius: '24px',
-                                        bgcolor: 'white',
-                                        border: '1px solid rgba(226, 232, 240, 0.8)',
-                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                                        transition: 'all 0.3s ease',
-                                        '&:hover': { transform: 'translateY(-5px)', borderColor: stat.color, boxShadow: `0 12px 24px -10px ${stat.color}40` }
-                                    }}>
-                                        <Typography variant="h4" sx={{ fontWeight: 900, color: stat.color, mb: 0.5 }}>{stat.value}</Typography>
-                                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>{stat.title}</Typography>
-                                    </Box>
-                                </Grid>
-                            ))}
-                        </Grid> */}
-                    </Box>
-
-                    {/* Portals Section */}
-                    <Typography variant="h5" sx={{ fontWeight: 900, mb: 5, color: '#0f172a', textAlign: 'center' }}>
-                        Choose Your Portal
-                    </Typography>
-                    <Grid container spacing={4}>
-                        {portalTiles.map((portal, idx) => (
-                            <Grid item xs={12} md={4} key={idx}>
-                                <Card sx={{
-                                    height: '100%',
-                                    p: 1,
-                                    borderRadius: '32px',
-                                    position: 'relative',
-                                    '&:hover': {
-                                        transform: 'translateY(-12px)',
-                                        '& .portal-btn': {
-                                            transform: 'scale(1.02)',
-                                            boxShadow: `0 20px 40px -10px ${portal.color}60`
-                                        }
-                                    }
-                                }}>
-                                    <Box sx={{
-                                        p: 4,
-                                        height: '100%',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        borderRadius: '28px',
-                                        bgcolor: '#fff'
-                                    }}>
-                                        <Box sx={{
-                                            width: 64, height: 64, borderRadius: '20px',
-                                            background: portal.gradient,
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            mb: 4,
-                                            boxShadow: `0 12px 24px -6px ${portal.color}50`
-                                        }}>
-                                            <portal.icon sx={{ color: '#fff', fontSize: 32 }} />
-                                        </Box>
-
-                                        <Typography variant="h5" sx={{ fontWeight: 800, mb: 2, color: '#0f172a' }}>
-                                            {portal.title}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#64748b', mb: 4, flexGrow: 1, lineHeight: 1.6 }}>
-                                            {portal.desc}
-                                        </Typography>
-
-                                        <Stack spacing={2} sx={{ mb: 5 }}>
-                                            {portal.features.map((feat, i) => (
-                                                <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: portal.color }} />
-                                                    <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155' }}>{feat}</Typography>
-                                                </Box>
-                                            ))}
-                                        </Stack>
-
-                                        <Button
-                                            fullWidth
-                                            className="portal-btn"
-                                            variant="contained"
-                                            onClick={() => navigate(portal.path, { state: { role: portal.role } })}
-                                            sx={{
-                                                background: portal.gradient,
-                                                borderRadius: '16px',
-                                                py: 2,
-                                                fontSize: '1rem',
-                                                '&:hover': { background: portal.gradient }
-                                            }}
-                                        >
-                                            Access Portal
-                                        </Button>
-                                    </Box>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
-
-                    {/* Informative Ecosystem */}
-                    <Box sx={{ mt: 15 }}>
-                        <Typography variant="h3" sx={{ fontWeight: 900, mb: 6, textAlign: 'center' }}>
-                            Platform Capabilities
-                        </Typography>
-                        <Grid container spacing={3}>
-                            {[
-                                { title: 'Unified Ledger', desc: 'Immutable medical history tracking across hospital nodes.', icon: Assignment, color: '#0ea5e9' },
-                                { title: 'Rapid Sync', desc: 'Sub-second synchronization for ultra-responsive care.', icon: Speed, color: '#10b981' },
-                                { title: 'Medical Records', desc: 'Enterprise every medical record with proper patient and doctor identity.', icon: Security, color: '#6366f1' },
-                                { title: 'Appointment Scheduling', desc: 'Appoinment scheduling by patient to doctor by ensuring date and time availability.', icon: CloudQueue, color: '#0ea5e9' }
-                            ].map((info, i) => (
-                                <Grid item xs={12} sm={6} md={3} key={i}>
-                                    <Box className="glass" sx={{
-                                        p: 4,
-                                        borderRadius: '24px',
-                                        height: '100%',
-                                        border: '1px solid rgba(255,255,255,0.4)',
-                                    }}>
-                                        <info.icon sx={{ fontSize: 40, color: info.color, mb: 2 }} />
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 1.5, color: '#0f172a' }}>{info.title}</Typography>
-                                        <Typography variant="caption" sx={{ color: '#64748b', lineHeight: 1.6, display: 'block' }}>{info.desc}</Typography>
-                                    </Box>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Box>
-
-                    {/* How It Works Section */}
-                    <Box sx={{ mt: 15, position: 'relative' }}>
-                        <Paper elevation={0} sx={{
-                            p: { xs: 4, md: 8 },
+              {/* Right Column: Dynamic Visuals & Floating Glass UI */}
+              <Grid item xs={12} md={6} sx={{ position: 'relative', height: '600px' }}>
+                  <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+                      {/* Main Background Area */}
+                      <Box 
+                        sx={{
+                            position: 'absolute',
+                            right: '5%',
+                            top: '10%',
+                            width: '80%',
+                            height: '80%',
                             borderRadius: '48px',
-                            bgcolor: '#0f172a',
-                            color: 'white',
-                            overflow: 'hidden',
-                            position: 'relative'
-                        }}>
-                            {/* Decorative background circle */}
-                            <Box sx={{
-                                position: 'absolute', top: -100, right: -100, width: 300, height: 300,
-                                bgcolor: 'primary.main', borderRadius: '50%', filter: 'blur(100px)', opacity: 0.1
-                            }} />
+                            background: 'url(https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80) center/cover',
+                            boxShadow: '0 30px 60px -15px rgba(0,0,0,0.2)',
+                            overflow: 'hidden'
+                        }}
+                      >
+                          <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.4), transparent)' }} />
+                      </Box>
 
-                            <Grid container spacing={8} alignItems="center">
-                                <Grid item xs={12} md={6}>
-                                    <Typography variant="h2" sx={{ color: 'white', mb: 4 }}>
-                                        Engineered for <br />
-                                        <Box component="span" sx={{ color: 'primary.light' }}>Performance</Box>
-                                    </Typography>
-                                    <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)', mb: 6 }}>
-                                        Our architecture prioritize interoperability and zero-latency data access, ensuring that life-critical information is always where it belongs: in the hands of care providers.
-                                    </Typography>
-                                    <Stack spacing={4}>
-                                        {[
-                                            { title: 'Strict Verification', desc: 'Secure onboarding for medical staff and patients.' },
-                                            { title: 'Metadata Indexing', desc: 'Instant search across millions of health records.' },
-                                            { title: 'Real-time Audit', desc: 'Complete transparency on data access and changes.' }
-                                        ].map((step, i) => (
-                                            <Box key={i} sx={{ display: 'flex', gap: 3 }}>
-                                                <Box sx={{
-                                                    width: 32, height: 32, borderRadius: '50%',
-                                                    bgcolor: 'primary.main', display: 'flex',
-                                                    alignItems: 'center', justifyContent: 'center',
-                                                    flexShrink: 0
-                                                }}>
-                                                    <Typography variant="caption" fontWeight={900}>{i + 1}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="subtitle1" fontWeight={800}>{step.title}</Typography>
-                                                    <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>{step.desc}</Typography>
-                                                </Box>
-                                            </Box>
-                                        ))}
-                                    </Stack>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <Box className="glass" sx={{
-                                        p: 5, borderRadius: '32px',
-                                        bgcolor: 'rgba(255,255,255,0.03) !important',
-                                        border: '1px solid rgba(255,255,255,0.1) !important'
-                                    }}>
-                                        <Stack spacing={4}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                                <Avatar sx={{ bgcolor: 'secondary.main', width: 56, height: 56 }}><Security /></Avatar>
-                                                <Box>
-                                                    <Typography variant="subtitle1" fontWeight={800}>Sovereign Identity</Typography>
-                                                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>Blockchain-inspired data integrity protocols.</Typography>
-                                                </Box>
-                                            </Box>
-                                            <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                                <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}><Speed /></Avatar>
-                                                <Box>
-                                                    <Typography variant="subtitle1" fontWeight={800}>Sub-ms Latency</Typography>
-                                                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>Optimized for emergency medical response.</Typography>
-                                                </Box>
-                                            </Box>
-                                            {/* <Button variant="contained" fullWidth sx={{ mt: 2, height: 56 }}>
-                                                Deep Dive into Architecture
-                                            </Button> */}
-                                        </Stack>
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                    </Box>
-                </Container>
-            </Box>
+                      {/* Floating Card 1 */}
+                      <Box 
+                          sx={{
+                              position: 'absolute',
+                              left: '0%',
+                              top: '25%',
+                              p: 3,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 3,
+                              minWidth: 320,
+                              bgcolor: 'background.paper',
+                              borderRadius: '24px',
+                              boxShadow: theme.palette.mode === 'light' ? '0 25px 50px -12px rgba(15,23,42,0.15)' : '0 25px 50px -12px rgba(0,0,0,0.5)',
+                              border: `1px solid ${theme.palette.divider}`
+                          }}
+                      >
+                          <Box sx={{ p: 2, bgcolor: theme.palette.mode === 'light' ? '#ecfdf5' : 'rgba(16, 185, 129, 0.1)', borderRadius: '16px', color: '#10b981' }}>
+                              <CalendarToday sx={{ fontSize: 32 }} />
+                          </Box>
+                          <Box>
+                              <Typography variant="caption" color="text.secondary" fontWeight={700} textTransform="uppercase">Live Status</Typography>
+                              <Typography variant="h6" color="text.primary" fontWeight={800}>Dr. Smith is Available</Typography>
+                              <Typography variant="body2" color="#10b981" fontWeight={700}>Waiting time: 2 mins</Typography>
+                          </Box>
+                      </Box>
 
-            {/* Premium Footer */}
-            <Box sx={{ py: 8, bgcolor: 'white', borderTop: '1px solid #f1f5f9', mt: 10 }}>
-                <Container maxWidth="xl">
-                    <Grid container spacing={4} sx={{ mb: 6 }}>
-                        <Grid item xs={12} md={4}>
-                            <Typography variant="h6" fontWeight={900} sx={{ mb: 2 }}>HPDOS</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Leading the transformation in digital healthcare delivery through precision data management.
-                            </Typography>
-                        </Grid>
-                        {/* <Grid item xs={6} md={2}>
-                            <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 2 }}>Platform</Typography>
-                            <Stack spacing={1}>
-                                <Typography variant="caption" color="text.secondary">Architecture</Typography>
-                                <Typography variant="caption" color="text.secondary">Security</Typography>
-                                <Typography variant="caption" color="text.secondary">Compliance</Typography>
-                            </Stack>
-                        </Grid>
-                        <Grid item xs={6} md={2}>
-                            <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 2 }}>Resources</Typography>
-                            <Stack spacing={1}>
-                                <Typography variant="caption" color="text.secondary">API Docs</Typography>
-                                <Typography variant="caption" color="text.secondary">Support</Typography>
-                                <Typography variant="caption" color="text.secondary">Logs</Typography>
-                            </Stack>
-                        </Grid> */}
-                         <Divider sx={{ mb: 4 }} />
-                         <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2}>
-                        <Typography variant="caption" color="text.secondary">
-                            © 2025 HOPDS International. Global Stable Release 2.4.0
-                        </Typography>
-                        <Stack direction="row" spacing={10}>
-                            <Typography variant="caption" fontWeight={700} color="text.secondary">Terms</Typography>
-                            <Typography variant="caption" fontWeight={700} color="text.secondary">Privacy</Typography>
-                            <Typography variant="caption" fontWeight={700} color="text.secondary">GDPR</Typography>
-                        </Stack>
-                    </Stack>
-                    </Grid>
-                    <Divider sx={{ mb: 4 }} />
-                    {/* <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2}>
-                        <Typography variant="caption" color="text.secondary">
-                            © 2025 HPDOS International. Global Stable Release 2.4.0
-                        </Typography>
-                        <Stack direction="row" spacing={4}>
-                            <Typography variant="caption" fontWeight={700} color="text.secondary">Terms</Typography>
-                            <Typography variant="caption" fontWeight={700} color="text.secondary">Privacy</Typography>
-                            <Typography variant="caption" fontWeight={700} color="text.secondary">GDPR</Typography>
-                        </Stack>
-                    </Stack> */}
-                </Container>
-            </Box>
+                      {/* Floating Card 2 */}
+                      <Box 
+                          sx={{
+                              position: 'absolute',
+                              right: '-5%',
+                              bottom: '15%',
+                              p: 3,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 3,
+                              minWidth: 280,
+                              bgcolor: 'background.paper',
+                              borderRadius: '24px',
+                              boxShadow: theme.palette.mode === 'light' ? '0 25px 50px -12px rgba(15,23,42,0.15)' : '0 25px 50px -12px rgba(0,0,0,0.5)',
+                              border: `1px solid ${theme.palette.divider}`
+                          }}
+                      >
+                          <Box sx={{ p: 2, bgcolor: theme.palette.mode === 'light' ? '#eff6ff' : 'rgba(37, 99, 235, 0.1)', borderRadius: '16px', color: 'primary.main' }}>
+                              <LocalHospital sx={{ fontSize: 32 }} />
+                          </Box>
+                          <Box>
+                              <Typography variant="caption" color="text.secondary" fontWeight={700} textTransform="uppercase">Secure Records</Typography>
+                              <Typography variant="h6" color="text.primary" fontWeight={800}>Data Protected</Typography>
+                              <Typography variant="body2" color="primary.main" fontWeight={700}>End-to-end encryption</Typography>
+                          </Box>
+                      </Box>
+                  </Box>
+              </Grid>
+            </Grid>
+          </Container>
         </Box>
-    );
+      </Box>
+
+      {/* Features Section */}
+      <Container maxWidth="xl" sx={{ py: { xs: 10, md: 15 } }}>
+        <Box sx={{ textAlign: 'center', mb: 10 }}>
+          <Typography variant="h2" sx={{ color: 'text.primary', mb: 2 }}>
+            Why Choose HOPDS?
+          </Typography>
+          <Typography variant="h6" sx={{ color: 'text.secondary', maxWidth: '800px', mx: 'auto', fontWeight: 500 }}>
+            We've built a platform that bridges the gap between patients, doctors, and hospital administrators, prioritizing speed, security, and usability.
+          </Typography>
+        </Box>
+        
+        <Grid container spacing={6}>
+          {features.map((feature, index) => (
+            <Grid item xs={12} md={4} key={index}>
+              <Box 
+                sx={{ 
+                  p: 5, 
+                  height: '100%',
+                  bgcolor: theme.palette.background.paper,
+                  borderRadius: '32px',
+                  border: `1px solid ${theme.palette.divider}`,
+                  transition: 'transform 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: theme.palette.mode === 'light' ? '0 25px 50px -12px rgba(0,0,0,0.05)' : '0 25px 50px -12px rgba(0,0,0,0.5)',
+                  }
+                }}
+              >
+                <Box sx={{ 
+                  width: 80, height: 80, 
+                  borderRadius: '24px', 
+                  bgcolor: theme.palette.mode === 'light' ? '#eff6ff' : 'rgba(37, 99, 235, 0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  mb: 4
+                }}>
+                  {feature.icon}
+                </Box>
+                <Typography variant="h4" sx={{ color: 'text.primary', mb: 2 }}>{feature.title}</Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
+                  {feature.description}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* How it Works Section */}
+      <Box sx={{ bgcolor: theme.palette.mode === 'light' ? '#f8fafc' : '#0f172a', py: { xs: 10, md: 15 } }}>
+        <Container maxWidth="xl">
+          <Grid container spacing={8} alignItems="center">
+            <Grid item xs={12} md={5}>
+              <Typography variant="h2" sx={{ color: 'text.primary', mb: 3 }}>
+                How It Works
+              </Typography>
+              <Typography variant="h6" sx={{ color: 'text.secondary', mb: 6, fontWeight: 500, lineHeight: 1.6 }}>
+                Our intuitive platform is designed to get you from registration to appointment booking in less than 5 minutes.
+              </Typography>
+              <Button 
+                  variant="contained" 
+                  onClick={() => navigate('/register')}
+                  endIcon={<ArrowForward />}
+                  sx={{ 
+                      bgcolor: 'text.primary', 
+                      color: 'background.paper', 
+                      borderRadius: '9999px',
+                      px: 5, py: 2,
+                      fontWeight: 800,
+                      fontSize: '1.1rem',
+                      '&:hover': { bgcolor: 'text.secondary', transform: 'translateY(-2px)' }
+                  }}
+              >
+                Create Account
+              </Button>
+            </Grid>
+            
+            <Grid item xs={12} md={7}>
+              <Stack spacing={4}>
+                {steps.map((step, index) => (
+                  <Box 
+                    key={index}
+                    sx={{ 
+                      display: 'flex', 
+                      gap: 4, 
+                      p: 4, 
+                      bgcolor: theme.palette.background.paper,
+                      borderRadius: '24px',
+                      border: `1px solid ${theme.palette.divider}`
+                    }}
+                  >
+                    <Typography 
+                      variant="h2" 
+                      sx={{ 
+                        color: 'primary.main', 
+                        opacity: 0.5, 
+                        fontWeight: 900,
+                        lineHeight: 1
+                      }}
+                    >
+                      {step.step}
+                    </Typography>
+                    <Box>
+                      <Typography variant="h4" sx={{ color: 'text.primary', mb: 1 }}>{step.title}</Typography>
+                      <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
+                        {step.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Stack>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Footer */}
+      <Box sx={{ bgcolor: theme.palette.background.paper, borderTop: `1px solid ${theme.palette.divider}`, pt: 10, pb: 6 }}>
+        <Container maxWidth="xl">
+          <Grid container spacing={8} sx={{ mb: 8 }}>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                <Box sx={{ p: 1, bgcolor: 'primary.main', borderRadius: '12px', color: '#fff', display: 'flex' }}>
+                  <LocalHospital sx={{ fontSize: 24 }} />
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary', letterSpacing: '-0.03em' }}>
+                  HOPDS
+                </Typography>
+              </Box>
+              <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4, maxWidth: '300px' }}>
+                Revolutionizing healthcare management by connecting patients, doctors, and hospitals through a unified digital platform.
+              </Typography>
+              <Stack direction="row" spacing={2}>
+                <IconButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}><Facebook /></IconButton>
+                <IconButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}><Twitter /></IconButton>
+                <IconButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}><LinkedIn /></IconButton>
+                <IconButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}><Instagram /></IconButton>
+              </Stack>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={2}>
+              <Typography variant="h6" sx={{ color: 'text.primary', mb: 3 }}>Platform</Typography>
+              <Stack spacing={2}>
+                {['Patient Portal', 'Doctor Portal', 'Hospital Admin', 'Security'].map((item) => (
+                  <Typography key={item} variant="body2" sx={{ color: 'text.secondary', cursor: 'pointer', fontWeight: 500, '&:hover': { color: 'primary.main' } }}>
+                    {item}
+                  </Typography>
+                ))}
+              </Stack>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={2}>
+              <Typography variant="h6" sx={{ color: 'text.primary', mb: 3 }}>Company</Typography>
+              <Stack spacing={2}>
+                {['About Us', 'Careers', 'Press', 'Contact'].map((item) => (
+                  <Typography key={item} variant="body2" sx={{ color: 'text.secondary', cursor: 'pointer', fontWeight: 500, '&:hover': { color: 'primary.main' } }}>
+                    {item}
+                  </Typography>
+                ))}
+              </Stack>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ color: 'text.primary', mb: 3 }}>Developer Info</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Box 
+                  sx={{ 
+                    position: 'relative',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      inset: -3,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(45deg, #3b82f6, #10b981)',
+                      zIndex: 0
+                    }
+                  }}
+                >
+                  <Avatar 
+                    src="https://github.com/Ojasvimishra.png" 
+                    sx={{ 
+                      width: 56, height: 56, 
+                      position: 'relative',
+                      zIndex: 1,
+                      border: `2px solid ${theme.palette.background.paper}`
+                    }} 
+                  />
+                </Box>
+                <Box>
+                  <Typography variant="body1" fontWeight={800} color="text.primary">Ojasvi Mishra</Typography>
+                  <Typography variant="body2" color="primary.main" fontWeight={700}>Full Stack Developer</Typography>
+                </Box>
+              </Box>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1.5, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 500 }}>
+                <Email sx={{ fontSize: 18, color: 'primary.main' }} /> ojasvimishra9792@gmail.com
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 500 }}>
+                <Phone sx={{ fontSize: 18, color: 'primary.main' }} /> +91-9044256927
+              </Typography>
+              <Stack direction="row" spacing={2}>
+                <Button 
+                  variant="outlined" 
+                  href="https://github.com/Ojasvimishra" 
+                  target="_blank"
+                  startIcon={<GitHub />}
+                  sx={{ borderRadius: '12px', fontWeight: 700, textTransform: 'none' }}
+                >
+                  GitHub
+                </Button>
+                <Button 
+                  variant="outlined" 
+                  href="http://www.linkedin.com/in/ojasvi-mishra2004" 
+                  target="_blank"
+                  startIcon={<LinkedIn />}
+                  sx={{ borderRadius: '12px', fontWeight: 700, textTransform: 'none' }}
+                >
+                  LinkedIn
+                </Button>
+              </Stack>
+            </Grid>
+          </Grid>
+          
+          <Divider sx={{ mb: 4 }} />
+          
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              &copy; {new Date().getFullYear()} HOPDS System. All rights reserved.
+            </Typography>
+            <Stack direction="row" spacing={4}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', cursor: 'pointer', fontWeight: 500, '&:hover': { color: 'text.primary' } }}>Privacy Policy</Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', cursor: 'pointer', fontWeight: 500, '&:hover': { color: 'text.primary' } }}>Terms of Service</Typography>
+            </Stack>
+          </Box>
+        </Container>
+      </Box>
+    </Box>
+  );
 };
 
 export default HomePage;
