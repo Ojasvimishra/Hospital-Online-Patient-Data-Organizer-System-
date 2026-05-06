@@ -1,272 +1,120 @@
-🏥 Hospital Online Patient Data Management System
+# Hospital Online Patient Data Organizer System (HOPDS) 🏥
 
-A secure, scalable, and role-based Hospital Online Patient Data Management System built using the MERN stack (MongoDB, Express.js, React.js, Node.js).
-This system digitizes hospital operations by efficiently managing patients, doctors, appointments, and medical records with strict access control and modern web technologies.
+![HOPDS Banner](https://img.shields.io/badge/Status-Active-brightgreen) ![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue) ![License](https://img.shields.io/badge/License-MIT-orange)
 
-📌 Project Overview
+HOPDS is a comprehensive, full-stack **MERN (MongoDB, Express, React, Node.js)** platform designed to digitize and streamline hospital management. It acts as a centralized ecosystem connecting Patients, Doctors, and Hospital Administrators through dedicated portals to manage appointments, medical records, and personnel approvals efficiently.
 
-The Hospital Online Patient Data Management System is designed to replace traditional paper-based hospital workflows with a centralized digital platform.
-It provides three-tier role-based access — Patient, Doctor, and Hospital/Admin — each with specialized permissions and responsibilities.
+## 🚀 Live Demo
+**[Vercel Deployment URL]** *(Insert your Vercel URL here once deployed)*
 
-The system focuses on:
+---
 
-Data accuracy
+## ✨ Key Features & Portals
 
-Security & privacy
+### 1. Patient Portal 🧑‍⚕️
+*   **Secure Authentication**: Register and login securely.
+*   **Appointment Booking**: Select available doctors, specify symptoms, and request appointments.
+*   **Medical History**: View comprehensive digital medical records and past doctor advice.
+*   **Profile Management**: Update personal and contact details seamlessly.
 
-Scalability
+### 2. Doctor Portal 👨‍⚕️
+*   **Appointment Management**: View, approve, or reject incoming patient appointment requests.
+*   **Patient Advisory**: Provide medical advice and prescriptions directly to approved appointments.
+*   **Medical Records**: Create and push new medical reports to a patient's permanent history.
+*   **Status Tracking**: Track "pending", "approved", and "completed" consultations.
 
-Ease of use
+### 3. Hospital Admin Portal 🏥
+*   **Personnel Management**: Oversee all registered patients and doctors.
+*   **Doctor Verification**: Approve or reject newly registered doctors before they can access the platform.
+*   **System Overview**: Global view of all appointments, records, and hospital statistics.
 
-Real-world hospital workflow simulation
+### 4. Global Platform Features 🌐
+*   **Dynamic Theming**: Premium Light/Dark mode architecture that persists across sessions.
+*   **Responsive UI**: Built with Material UI (MUI) v5 for a seamless mobile, tablet, and desktop experience.
+*   **Secure Routing**: JWT-based protected routes ensuring data privacy.
 
-🎯 Key Objectives
+---
 
-Digitize patient health records securely
+## 🛠️ Technology Stack
 
-Simplify doctor–patient interaction
+**Frontend:**
+*   React.js (v18)
+*   Material UI (MUI v5)
+*   React Router DOM (v6)
+*   Axios (API communication)
+*   Context API (State Management)
 
-Enable hospitals to manage large datasets efficiently
+**Backend:**
+*   Node.js & Express.js
+*   MongoDB & Mongoose
+*   JSON Web Tokens (JWT) & bcryptjs (Authentication)
+*   Cors & dotenv
 
-Implement role-based access control (RBAC)
+---
 
-Provide RESTful APIs for future scalability (mobile apps, integrations)
+## ⚙️ Installation & Local Development
 
-🧩 System Roles & Functionalities
-👤 Patient Module
+### Prerequisites
+*   Node.js (v16+)
+*   MongoDB installed locally or a MongoDB Atlas URI
 
-Secure patient registration and login
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Ojasvimishra/Hospital-patient-data-organisation-system.git
+cd Hospital-patient-data-organisation-system
+```
 
-Book appointments with available doctors
-
-View appointment history and status
-
-Access medical records and prescriptions
-
-Read doctor advice and treatment plans
-
-👨‍⚕️ Doctor Module
-
-Secure doctor registration and authentication
-
-View assigned patient appointments
-
-Accept, reschedule, or cancel appointments
-
-Create and maintain medical records
-
-Provide medical advice and prescriptions
-
-Track patient treatment history
-
-🏢 Hospital / Admin Module
-
-Centralized dashboard with system statistics
-
-Access all patients, doctors, and appointments
-
-Monitor complete medical records
-
-Perform data-level supervision and management
-
-High-level system control and analytics
-
-⚙️ Technology Stack
-🔹 Backend
-
-Node.js – Runtime environment
-
-Express.js – REST API framework
-
-JWT (JSON Web Token) – Secure authentication
-
-bcrypt – Password encryption
-
-MongoDB – NoSQL database
-
-Mongoose – ODM for database modeling
-
-🔹 Frontend
-
-React.js – Component-based UI
-
-Material-UI (MUI) – Modern UI components
-
-Context API – State management
-
-Axios / Fetch API – API communication
-
-🔹 Database
-
-MongoDB Atlas / Local MongoDB
-
-Schema-based document storage
-
-Indexed queries for performance optimization
-
-🗂️ Project Structure
-Hospital-Online-Patient-Data-Management-System/
-│
-├── backend/
-│   ├── models/              # MongoDB Schemas
-│   ├── routes/              # API Routes
-│   ├── controllers/         # Business Logic
-│   ├── middleware/          # Auth & Role Guard
-│   ├── config/              # DB & Environment Config
-│   ├── server.js            # Server Entry Point
-│   └── package.json
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/      # Reusable Components
-│   │   ├── pages/           # Page-Level Components
-│   │   ├── context/         # Global State Providers
-│   │   ├── services/        # API Services
-│   │   └── App.js
-│   └── package.json
-│
-└── README.md
-
-🚀 Installation & Setup
-📋 Prerequisites
-
-Node.js (v14+)
-
-MongoDB (Local or Atlas)
-
-npm or yarn
-
-🔧 Backend Setup
-cd backend
+### 2. Install Dependencies
+This project uses a monorepo setup. Install root dependencies, which will automatically install frontend and backend dependencies via postinstall script:
+```bash
 npm install
+```
+*(Alternatively, run `npm install` inside both `/frontend` and `/backend` directories)*
 
-
-Create .env file:
-
+### 3. Environment Variables
+Create a `project.env` file in the **backend** directory:
+```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/hospital_online_management
-JWT_SECRET=your_secure_jwt_secret
+MONGODB_URI=mongodb://localhost:27017/hospital_management
+JWT_SECRET=your_super_secret_jwt_key
 NODE_ENV=development
+```
 
-
-Run backend server:
-
-npm start
-# OR (development mode)
+### 4. Run the Application
+Start both the backend server and the React frontend concurrently:
+```bash
+# Start backend (from /backend)
 npm run dev
 
-
-📍 Backend runs on: http://localhost:5000
-
-🎨 Frontend Setup
-cd frontend
-npm install
+# Start frontend (from /frontend)
 npm start
+```
+The application will be available at `http://localhost:3000`.
 
+---
 
-📍 Frontend runs on: http://localhost:3000
+## 🌍 Vercel Deployment
 
-🔌 API Endpoints (RESTful)
-🔐 Authentication
+This project is perfectly pre-configured for Serverless deployment on Vercel using the root `vercel.json` file.
 
-POST /api/auth/register/patient
+1.  Connect your GitHub repository to Vercel.
+2.  Vercel will automatically read the `vercel.json` to route `/api/*` to `@vercel/node` and the frontend to `@vercel/static-build`.
+3.  Add your Environment Variables (`MONGODB_URI`, `JWT_SECRET`) in the Vercel Dashboard.
+4.  Deploy!
 
-POST /api/auth/register/doctor
+---
 
-POST /api/auth/register/hospital
+## 👨‍💻 Developer Information
 
-POST /api/auth/login
+**Ojasvi Mishra**  
+*Full Stack Developer*
 
-GET /api/auth/me
+*   📧 Email: ojasvimishra9792@gmail.com
+*   📱 Mobile: +91-9044256927
+*   💼 LinkedIn: [ojasvi-mishra2004](http://www.linkedin.com/in/ojasvi-mishra2004)
+*   🐙 GitHub: [Ojasvimishra](https://github.com/Ojasvimishra)
 
-📅 Appointments
+---
 
-POST /api/appointments (Patient)
-
-GET /api/appointments/patient
-
-GET /api/appointments/doctor
-
-GET /api/appointments/all (Hospital)
-
-PATCH /api/appointments/:id/status
-
-PATCH /api/appointments/:id/advice
-
-📄 Medical Records
-
-POST /api/medical-records (Doctor)
-
-GET /api/medical-records/patient
-
-GET /api/medical-records/doctor
-
-GET /api/medical-records/all (Hospital)
-
-🧑‍⚕️ Patients & Doctors
-
-GET /api/patients/me
-
-GET /api/patients/all
-
-GET /api/doctors/me
-
-GET /api/doctors/all
-
-🏥 Hospital Admin
-
-GET /api/hospital/profile
-
-GET /api/hospital/dashboard
-
-GET /api/hospital/all-data
-
-🔐 Security Implementation
-
-Password hashing using bcrypt
-
-JWT-based stateless authentication
-
-Role-Based Access Control (RBAC)
-
-Protected routes via middleware
-
-Environment variable security
-
-CORS configuration for deployment
-
-📈 Future Enhancements
-
-Role-based dashboards with charts (Chart.js)
-
-Email & SMS notifications
-
-File upload for reports (PDF, scans)
-
-AI-based health analytics
-
-Mobile application support
-
-Audit logs and activity tracking
-
-🛠️ Development Commands
-
-Backend:
-
-npm run dev
-
-
-Frontend:
-
-npm start
-
-📄 License
-
-This project is open-source and intended for educational and learning purposes.
-You are free to modify and extend the system for academic or portfolio projects.
-
-👨‍💻 Author
-
-Ojasvi Mishra
-B.Tech CSE | MERN Stack Developer | AI & ML Enthusiast
+## 📝 License
+This project is licensed under the MIT License.
