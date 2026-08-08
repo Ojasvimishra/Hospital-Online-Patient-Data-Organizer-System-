@@ -117,4 +117,4 @@ This project is perfectly pre-configured for Serverless deployment on Vercel usi
 ---
 
 ## 📝 License
-This project is licensed under the MIT License.
+This project is licensed under the ojasvimishra License.
